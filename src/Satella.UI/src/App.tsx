@@ -711,6 +711,7 @@ export const App: React.FC = () => {
             onToggleUserEnabled={handleToggleUserEnabled}
             onOffboardUser={handleOffboardUser}
             onDeleteUser={handleDeleteUser}
+            onOpenUserWindow={handleOpenUserWindow}
           />
         );
       })}

@@ -535,6 +535,18 @@ public class HybridDirectoryService : IDirectoryService
             user.Description = request.Description;
             user.Enabled = request.Enabled;
             user.PasswordNeverExpires = request.PasswordNeverExpires;
+            if (!string.IsNullOrWhiteSpace(request.SamAccountName))
+                user.SamAccountName = request.SamAccountName;
+            if (!string.IsNullOrWhiteSpace(request.UserPrincipalName))
+                user.UserPrincipalName = request.UserPrincipalName;
+            if (request.Mobile != null)
+                user.Mobile = request.Mobile;
+            if (request.ManagerDn != null)
+                user.ManagerDn = request.ManagerDn;
+            if (request.MustChangePasswordNextLogon.HasValue)
+                user.MustChangePasswordNextLogon = request.MustChangePasswordNextLogon.Value;
+            if (request.LockedOut.HasValue)
+                user.LockedOut = request.LockedOut.Value;
             user.MemberOf = request.MemberOf ?? new List<string>();
             if (request.CustomAttributes != null)
             {

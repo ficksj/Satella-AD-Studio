@@ -35,7 +35,13 @@ public record UpdateUserRequest(
     bool Enabled,
     bool PasswordNeverExpires,
     List<string> MemberOf,
-    Dictionary<string, string> CustomAttributes
+    Dictionary<string, string> CustomAttributes,
+    string? SamAccountName = null,
+    string? UserPrincipalName = null,
+    string? Mobile = null,
+    string? ManagerDn = null,
+    bool? MustChangePasswordNextLogon = null,
+    bool? LockedOut = null
 );
 
 public record ResetPasswordRequest(string UserId, string NewPassword, bool MustChangeNextLogon, bool UnlockAccount);

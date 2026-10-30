@@ -52,6 +52,9 @@ export default {
         sans: ['Inter', 'Segoe UI Variable Display', 'Segoe UI', 'system-ui', 'sans-serif'],
         mono: ['JetBrains Mono', 'Cascadia Code', 'Consolas', 'monospace'],
       },
+      gridTemplateColumns: {
+        24: 'repeat(24, minmax(0, 1fr))',
+      },
     },
   },
   plugins: [],

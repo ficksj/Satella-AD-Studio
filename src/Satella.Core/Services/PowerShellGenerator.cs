@@ -45,18 +45,35 @@ public static class PowerShellGenerator
     public static string ForUpdateUser(AdUser user)
     {
         var sb = new StringBuilder();
-        sb.AppendLine("# Обновление атрибутов пользователя AD");
+        sb.AppendLine("# Обновление свойств карточки пользователя Active Directory (dsa.msc)");
         sb.AppendLine($"Set-ADUser -Identity \"{EscapePs(user.SamAccountName)}\" `");
         sb.AppendLine($"    -DisplayName \"{EscapePs(user.DisplayName)}\" `");
         sb.AppendLine($"    -GivenName \"{EscapePs(user.GivenName)}\" `");
         sb.AppendLine($"    -Surname \"{EscapePs(user.Surname)}\" `");
+        sb.AppendLine($"    -UserPrincipalName \"{EscapePs(user.UserPrincipalName)}\" `");
         sb.AppendLine($"    -Title \"{EscapePs(user.Title)}\" `");
         sb.AppendLine($"    -Department \"{EscapePs(user.Department)}\" `");
         sb.AppendLine($"    -Company \"{EscapePs(user.Company)}\" `");
         sb.AppendLine($"    -Office \"{EscapePs(user.Office)}\" `");
         sb.AppendLine($"    -EmailAddress \"{EscapePs(user.Email)}\" `");
         sb.AppendLine($"    -OfficePhone \"{EscapePs(user.Telephone)}\" `");
+        if (!string.IsNullOrWhiteSpace(user.Mobile))
+            sb.AppendLine($"    -MobilePhone \"{EscapePs(user.Mobile)}\" `");
+        if (!string.IsNullOrWhiteSpace(user.ManagerDn))
+            sb.AppendLine($"    -Manager \"{EscapePs(user.ManagerDn)}\" `");
+        if (user.CustomAttributes.TryGetValue("profilePath", out var profPath) && !string.IsNullOrWhiteSpace(profPath))
+            sb.AppendLine($"    -ProfilePath \"{EscapePs(profPath)}\" `");
+        if (user.CustomAttributes.TryGetValue("scriptPath", out var scrPath) && !string.IsNullOrWhiteSpace(scrPath))
+            sb.AppendLine($"    -ScriptPath \"{EscapePs(scrPath)}\" `");
+        if (user.CustomAttributes.TryGetValue("homeDirectory", out var homeDir) && !string.IsNullOrWhiteSpace(homeDir))
+            sb.AppendLine($"    -HomeDirectory \"{EscapePs(homeDir)}\" `");
+        if (user.CustomAttributes.TryGetValue("homeDrive", out var homeDrv) && !string.IsNullOrWhiteSpace(homeDrv))
+            sb.AppendLine($"    -HomeDrive \"{EscapePs(homeDrv)}\" `");
+        if (user.CustomAttributes.TryGetValue("userWorkstations", out var ws) && !string.IsNullOrWhiteSpace(ws))
+            sb.AppendLine($"    -LogonWorkstations \"{EscapePs(ws)}\" `");
         sb.AppendLine($"    -Description \"{EscapePs(user.Description)}\" `");
+        sb.AppendLine($"    -Enabled ${(user.Enabled ? "true" : "false")} `");
+        sb.AppendLine($"    -ChangePasswordAtLogon ${(user.MustChangePasswordNextLogon ? "true" : "false")} `");
         sb.AppendLine($"    -PasswordNeverExpires ${(user.PasswordNeverExpires ? "true" : "false")}");
         return sb.ToString().TrimEnd();
     }
