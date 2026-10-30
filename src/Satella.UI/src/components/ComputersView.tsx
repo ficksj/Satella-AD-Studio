@@ -235,7 +235,7 @@ export const ComputersView: React.FC<Props> = ({
 
       {/* Right Host Control Center */}
       {activeHost && (
-        <div className="flex-1 flex flex-col overflow-hidden bg-[#030805]">
+        <div className="flex-1 flex flex-col overflow-hidden bg-zinc-950">
           {/* Header */}
           <div className="flex flex-wrap items-center justify-between gap-4 border-b border-zinc-800 bg-zinc-950/60 px-6 py-4">
             <div>

@@ -295,7 +295,7 @@ export const DirectoryExplorerView: React.FC<Props> = ({
       </div>
 
       {/* Center Pane: Users / Groups Table */}
-      <div className="flex-1 flex flex-col overflow-hidden bg-[#030805]">
+      <div className="flex-1 flex flex-col overflow-hidden bg-zinc-950">
         {/* Toolbar */}
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-zinc-800 px-5 py-3">
           <div className="flex items-center gap-2">

@@ -52,7 +52,14 @@ interface OpenUserWin {
 
 export const App: React.FC = () => {
   const [lang, setLang] = useState<Lang>('ru');
+  const [visualTheme, setVisualTheme] = useState<'emerald' | 'midnight' | 'warm'>('emerald');
   const t = translations[lang];
+
+  useEffect(() => {
+    document.body.classList.remove('theme-midnight', 'theme-warm');
+    if (visualTheme === 'midnight') document.body.classList.add('theme-midnight');
+    if (visualTheme === 'warm') document.body.classList.add('theme-warm');
+  }, [visualTheme]);
 
   const [activeTab, setActiveTab] = useState<string>('dashboard');
   const [cmdOpen, setCmdOpen] = useState(false);
@@ -347,19 +354,19 @@ export const App: React.FC = () => {
   ];
 
   return (
-    <div className="flex h-screen w-screen flex-col overflow-hidden bg-[#030805] text-zinc-100">
+    <div className="flex h-screen w-screen flex-col overflow-hidden bg-zinc-950 text-zinc-100">
       {/* Top Global Header Bar */}
-      <header className="flex h-13 shrink-0 items-center justify-between border-b border-zinc-800/90 bg-zinc-950 px-4">
+      <header className="flex h-14 shrink-0 items-center justify-between border-b border-zinc-800/80 bg-zinc-900/70 backdrop-blur-md px-5">
         <div className="flex items-center gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-emerald-500/40 bg-emerald-950/60 shadow-md shadow-emerald-500/20 p-1">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-emerald-500/30 bg-emerald-950/40 shadow-sm p-1">
             <PixelMonkeyIcon className="h-7 w-7" />
           </div>
           <div>
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-bold tracking-tight text-emerald-300">
-                SATELLA AD
+            <div className="flex items-center gap-2.5">
+              <span className="text-sm font-bold tracking-tight text-zinc-100">
+                SATELLA <span className="text-emerald-400">AD</span>
               </span>
-              <span className="rounded bg-emerald-500/15 border border-emerald-500/40 px-2 py-0.5 text-[10px] font-bold text-emerald-300">
+              <span className="rounded-md bg-emerald-500/10 border border-emerald-500/25 px-2 py-0.5 text-[10px] font-medium text-emerald-300">
                 Сделано командой Crazy Monkeys
               </span>
             </div>
@@ -395,6 +402,26 @@ export const App: React.FC = () => {
 
         {/* Right Global Controls */}
         <div className="flex items-center gap-2">
+          <div className="hidden lg:flex items-center rounded-lg border border-zinc-800 bg-zinc-950/80 p-0.5 text-[11px]">
+            {[
+              { id: 'emerald', label: '🌿 Изумруд' },
+              { id: 'midnight', label: '🌌 Индиго' },
+              { id: 'warm', label: '☕ Тёплый' },
+            ].map((th) => (
+              <button
+                key={th.id}
+                onClick={() => setVisualTheme(th.id as typeof visualTheme)}
+                className={`px-2.5 py-1 rounded-md font-medium transition ${
+                  visualTheme === th.id
+                    ? 'bg-zinc-800 text-emerald-300 shadow-sm'
+                    : 'text-zinc-400 hover:text-zinc-200'
+                }`}
+              >
+                {th.label}
+              </button>
+            ))}
+          </div>
+
           <button
             onClick={() => setPsDrawerOpen(true)}
             className="flex items-center gap-1.5 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 text-xs font-medium text-emerald-300 hover:bg-emerald-500/20 transition"
@@ -416,7 +443,7 @@ export const App: React.FC = () => {
       {/* Main Workspace Container */}
       <div className="flex flex-1 overflow-hidden">
         {/* Left Navigation Sidebar */}
-        <aside className="w-60 shrink-0 border-r border-zinc-800/90 bg-zinc-950 flex flex-col justify-between p-3">
+        <aside className="w-60 shrink-0 border-r border-zinc-800/80 bg-zinc-900/40 flex flex-col justify-between p-3">
           <nav className="space-y-1">
             {navItems.map((item) => {
               const Icon = item.icon;
@@ -485,7 +512,7 @@ export const App: React.FC = () => {
         </aside>
 
         {/* Active View Content */}
-        <main className="flex-1 overflow-hidden bg-[#030805] relative">
+        <main className="flex-1 overflow-hidden bg-zinc-950 relative">
           {activeTab === 'dashboard' && (
             <DashboardView
               stats={stats}
