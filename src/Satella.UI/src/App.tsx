@@ -14,6 +14,7 @@ import {
   User,
   X,
   ShieldAlert,
+  Network,
 } from 'lucide-react';
 import { api } from './api';
 import { translations, type Lang } from './i18n';
@@ -41,6 +42,7 @@ import { AutomationView } from './components/AutomationView';
 import { InfraGpoDnsView } from './components/InfraGpoDnsView';
 import { AuditAndRecycleView } from './components/AuditAndRecycleView';
 import { SecurityAndPamView } from './components/SecurityAndPamView';
+import { OrgAndForensicsView } from './components/OrgAndForensicsView';
 import { UserPropertyWindow } from './components/UserPropertyWindow';
 import { PixelMonkeyIcon } from './components/PixelMonkeyIcon';
 
@@ -332,6 +334,12 @@ export const App: React.FC = () => {
       badge: stats?.lockedOutUsers ? `${stats.lockedOutUsers} lock` : undefined,
     },
     {
+      id: 'forensics',
+      label: lang === 'ru' ? 'Оргструктура и Event 4740' : 'Org Chart & Event 4740',
+      icon: Network,
+      badge: stats?.lockedOutUsers ? `${stats.lockedOutUsers}` : 'AD',
+    },
+    {
       id: 'computers',
       label: t.navComputers,
       icon: Monitor,
@@ -558,6 +566,19 @@ export const App: React.FC = () => {
               onUnlockUser={handleUnlockUser}
               onBulkAction={handleBulkAction}
               onCreateGroup={handleCreateGroup}
+            />
+          )}
+
+          {activeTab === 'forensics' && (
+            <OrgAndForensicsView
+              users={users}
+              groups={groups}
+              computers={computers}
+              acls={acls}
+              onOpenUserWindow={handleOpenUserWindow}
+              onUpdateUser={handleUpdateUser}
+              onUnlockUser={handleUnlockUser}
+              onNotify={(msg, ps) => showToast(msg, ps)}
             />
           )}
 

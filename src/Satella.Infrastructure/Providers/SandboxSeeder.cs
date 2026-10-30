@@ -400,6 +400,69 @@ public static class SandboxSeeder
 
     public static void EnsureEnterpriseModulesSeeded(SandboxStateDocument state)
     {
+        // Seed default Org Chart hierarchy (ManagerDn) & Lockout Forensics (Event 4740) if not set yet
+        var ceo = state.Users.FirstOrDefault(u => u.SamAccountName == "v.orlov");
+        var cto = state.Users.FirstOrDefault(u => u.SamAccountName == "a.volkov");
+        var cfo = state.Users.FirstOrDefault(u => u.SamAccountName == "m.sokolova");
+        var hrd = state.Users.FirstOrDefault(u => u.SamAccountName == "e.lebedeva");
+        var ciso = state.Users.FirstOrDefault(u => u.SamAccountName == "i.petrov");
+
+        if (ceo != null && state.Users.All(u => string.IsNullOrEmpty(u.ManagerDn)))
+        {
+            foreach (var u in state.Users)
+            {
+                if (u.SamAccountName is "a.volkov" or "m.sokolova" or "e.lebedeva" or "i.petrov" or "p.belov")
+                {
+                    u.ManagerDn = ceo.DistinguishedName;
+                }
+                else if (u.SamAccountName is "d.morozov" or "k.smirnov" or "n.kozlov" or "s.vasilyev" or "svc_gitlab_ldap")
+                {
+                    u.ManagerDn = cto?.DistinguishedName ?? ceo.DistinguishedName;
+                }
+                else if (u.SamAccountName is "o.novikova" or "t.popova" or "svc_1c_server")
+                {
+                    u.ManagerDn = cfo?.DistinguishedName ?? ceo.DistinguishedName;
+                }
+                else if (u.SamAccountName is "a.zaytseva")
+                {
+                    u.ManagerDn = hrd?.DistinguishedName ?? ceo.DistinguishedName;
+                }
+                if (!string.IsNullOrEmpty(u.ManagerDn))
+                {
+                    u.CustomAttributes["manager"] = u.ManagerDn;
+                }
+            }
+        }
+
+        // Seed Lockout Forensics (Event ID 4740 / 4625) metadata on users
+        foreach (var u in state.Users)
+        {
+            if (u.SamAccountName == "m.sokolova" && !u.CustomAttributes.ContainsKey("lockoutCallerComputer"))
+            {
+                u.CustomAttributes["lockoutCallerComputer"] = "SRV-1C-APP.corp.satella.local";
+                u.CustomAttributes["lockoutCallerIp"] = "10.20.2.25";
+                u.CustomAttributes["lockoutService"] = "RDP Терминальная сессия #3 (mstsc.exe / 1cv8c.exe)";
+                u.CustomAttributes["lockoutReason"] = "Зависшая отключённая RDP-сессия на сервере 1С продолжает отправлять старый пароль каждые 30 сек. после плановой смены пароля.";
+                u.CustomAttributes["lockoutEventId"] = "Event ID 4740 (PDC: SRV-DC-01)";
+            }
+            else if (u.SamAccountName == "k.smirnov" && !u.CustomAttributes.ContainsKey("lockoutCallerComputer"))
+            {
+                u.CustomAttributes["lockoutCallerComputer"] = "RADIUS-WIFI-GW (Cisco WLC)";
+                u.CustomAttributes["lockoutCallerIp"] = "10.20.10.22";
+                u.CustomAttributes["lockoutService"] = "Wi-Fi 802.1X PEAP-MSCHAPv2 / Мобильный телефон iPhone";
+                u.CustomAttributes["lockoutReason"] = "Смартфон сотрудника пытается подключиться к корпоративной сети WiFi-Corp-Access с закэшированным старым паролем AD.";
+                u.CustomAttributes["lockoutEventId"] = "Event ID 4740 / NPS 6273";
+            }
+            else if (u.SamAccountName == "p.belov" && !u.CustomAttributes.ContainsKey("lockoutCallerComputer"))
+            {
+                u.CustomAttributes["lockoutCallerComputer"] = "WS-SPB-019.corp.satella.local";
+                u.CustomAttributes["lockoutCallerIp"] = "10.20.50.19";
+                u.CustomAttributes["lockoutService"] = "Диспетчер учётных данных Windows (Credential Manager / SMB)";
+                u.CustomAttributes["lockoutReason"] = "Сохранённый сетевой диск H: (\\\\fs01\\profiles) или Outlook пытается авторизоваться по NTLM со старыми учётными данными.";
+                u.CustomAttributes["lockoutEventId"] = "Event ID 4740 / 4625 (SubStatus 0xC0000234)";
+            }
+        }
+
         if (state.BitLockerKeys.Count == 0)
         {
             var blIdx = 1;
