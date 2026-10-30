@@ -13,6 +13,7 @@ import {
   Server,
   User,
   X,
+  ShieldAlert,
 } from 'lucide-react';
 import { api } from './api';
 import { translations, type Lang } from './i18n';
@@ -39,6 +40,7 @@ import { ComputersView } from './components/ComputersView';
 import { AutomationView } from './components/AutomationView';
 import { InfraGpoDnsView } from './components/InfraGpoDnsView';
 import { AuditAndRecycleView } from './components/AuditAndRecycleView';
+import { SecurityAndPamView } from './components/SecurityAndPamView';
 import { UserPropertyWindow } from './components/UserPropertyWindow';
 import { PixelMonkeyIcon } from './components/PixelMonkeyIcon';
 
@@ -328,6 +330,12 @@ export const App: React.FC = () => {
       icon: Monitor,
       badge: stats ? `${stats.onlineComputers}/${stats.totalComputers}` : undefined,
     },
+    {
+      id: 'security',
+      label: lang === 'ru' ? 'ИБ, PAM и Контроллеры' : 'Security, PAM & DCs',
+      icon: ShieldAlert,
+      badge: 'NEW',
+    },
     { id: 'automation', label: t.navAutomation, icon: Sparkles },
     { id: 'infra', label: t.navInfra, icon: ShieldCheck },
     {
@@ -546,6 +554,19 @@ export const App: React.FC = () => {
                 refreshAll();
               }}
             />
+          )}
+
+          {activeTab === 'security' && (
+            <div className="h-full overflow-y-auto p-6">
+              <SecurityAndPamView
+                users={users}
+                groups={groups}
+                computers={computers}
+                domainName={activeProfile?.domainName || 'corp.satella.local'}
+                onNotify={(msg, ps) => showToast(msg, ps)}
+                onRefreshAll={refreshAll}
+              />
+            </div>
           )}
 
           {activeTab === 'automation' && (

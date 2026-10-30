@@ -5,11 +5,14 @@ import type {
   AdUser,
   AclRule,
   AuditActionEntry,
+  BitLockerRecord,
   CommandResult,
   DashboardStats,
   DhcpLease,
   DnsRecord,
+  DomainControllerStatus,
   DomainProfile,
+  JitAccessGrant,
   OnboardingTemplate,
   OuNode,
   RecycleBinObject,
@@ -17,6 +20,7 @@ import type {
   RemoteProcessInfo,
   RemoteServiceInfo,
   ScriptExecutionResult,
+  SecurityFinding,
 } from './types';
 
 const API_BASE =
@@ -281,5 +285,41 @@ export const api = {
     request<CommandResult<DhcpLease>>(`/dhcp/${id}/reserve`, {
       method: 'POST',
     }),
+
+  // Security Scanner, JIT/PAM, Domain Controllers & BitLocker
+  runSecurityScan: () => request<SecurityFinding[]>('/security/scan'),
+  fixSecurityFinding: (id: string) =>
+    request<CommandResult<SecurityFinding>>(`/security/fix/${id}`, {
+      method: 'POST',
+    }),
+  getJitGrants: () => request<JitAccessGrant[]>('/jit'),
+  createJitGrant: (data: {
+    userId: string;
+    groupId: string;
+    durationMinutes: number;
+    reason: string;
+  }) =>
+    request<CommandResult<JitAccessGrant>>('/jit', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+  revokeJitGrant: (id: string) =>
+    request<CommandResult<boolean>>(`/jit/${id}/revoke`, {
+      method: 'POST',
+    }),
+  getDomainControllers: () => request<DomainControllerStatus[]>('/dcs'),
+  transferFsmoRole: (roleName: string, targetDcName: string) =>
+    request<CommandResult<DomainControllerStatus[]>>('/dcs/transfer-fsmo', {
+      method: 'POST',
+      body: JSON.stringify({ roleName, targetDcName }),
+    }),
+  forceDcReplication: () =>
+    request<CommandResult<DomainControllerStatus[]>>('/dcs/sync', {
+      method: 'POST',
+    }),
+  getBitLockerKeys: (search?: string) =>
+    request<BitLockerRecord[]>(
+      `/bitlocker${search ? `?search=${encodeURIComponent(search)}` : ''}`
+    ),
 };
 

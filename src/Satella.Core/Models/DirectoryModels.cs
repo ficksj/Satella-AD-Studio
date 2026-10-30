@@ -109,6 +109,68 @@ public class AdComputer
     public string Description { get; set; } = string.Empty;
     public string LapsPassword { get; set; } = string.Empty;
     public DateTime? LapsExpiration { get; set; }
+    public List<BitLockerRecoveryKey> BitLockerKeys { get; set; } = new();
+}
+
+public class BitLockerRecoveryKey
+{
+    public string KeyId { get; set; } = string.Empty;
+    public string RecoveryPassword { get; set; } = string.Empty;
+    public string VolumeType { get; set; } = "Operating System Drive (C:)";
+    public string CipherStrength { get; set; } = "XTS-AES 256-bit (TPM 2.0)";
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow.AddMonths(-2);
+}
+
+public class SecurityFinding
+{
+    public string Id { get; set; } = System.Guid.NewGuid().ToString("N");
+    public string Severity { get; set; } = "High"; // Critical, High, Medium
+    public string Category { get; set; } = "PrivilegedAccess";
+    public string Title { get; set; } = string.Empty;
+    public string TargetName { get; set; } = string.Empty;
+    public string TargetSam { get; set; } = string.Empty;
+    public string TargetDn { get; set; } = string.Empty;
+    public string ObjectClass { get; set; } = "user";
+    public string Description { get; set; } = string.Empty;
+    public string Recommendation { get; set; } = string.Empty;
+    public string RemediationAction { get; set; } = string.Empty;
+    public string PowerShellFix { get; set; } = string.Empty;
+    public bool IsFixed { get; set; }
+}
+
+public class JitAccessGrant
+{
+    public string Id { get; set; } = System.Guid.NewGuid().ToString("N");
+    public string UserId { get; set; } = string.Empty;
+    public string UserSam { get; set; } = string.Empty;
+    public string UserDisplayName { get; set; } = string.Empty;
+    public string GroupId { get; set; } = string.Empty;
+    public string GroupName { get; set; } = string.Empty;
+    public string GroupDn { get; set; } = string.Empty;
+    public DateTime GrantedAt { get; set; } = DateTime.UtcNow;
+    public DateTime ExpiresAt { get; set; } = DateTime.UtcNow.AddHours(1);
+    public int DurationMinutes { get; set; } = 60;
+    public string Reason { get; set; } = string.Empty;
+    public string GrantedBy { get; set; } = "CORP\\a.volkov";
+    public bool IsActive { get; set; } = true;
+}
+
+public class DomainControllerStatus
+{
+    public string Name { get; set; } = string.Empty;
+    public string Fqdn { get; set; } = string.Empty;
+    public string IpAddress { get; set; } = string.Empty;
+    public string SiteName { get; set; } = "Moscow-HQ-Site";
+    public string OperatingSystem { get; set; } = "Windows Server 2022 Datacenter";
+    public bool IsGlobalCatalog { get; set; } = true;
+    public bool IsReadOnly { get; set; }
+    public bool IsOnline { get; set; } = true;
+    public List<string> FsmoRoles { get; set; } = new();
+    public string ReplicationStatus { get; set; } = "Healthy (0 errors)";
+    public int ReplicationDeltaSeconds { get; set; } = 2;
+    public DateTime LastReplicationAt { get; set; } = DateTime.UtcNow.AddMinutes(-2);
+    public bool SysvolReady { get; set; } = true;
+    public bool NetlogonReady { get; set; } = true;
 }
 
 public class RemoteProcessInfo

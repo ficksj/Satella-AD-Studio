@@ -101,6 +101,78 @@ export interface AdComputer {
   description: string;
   lapsPassword: string;
   lapsExpiration?: string | null;
+  bitLockerKeys?: BitLockerRecoveryKey[];
+}
+
+export interface BitLockerRecoveryKey {
+  keyId: string;
+  recoveryPassword: string;
+  volumeType: string;
+  cipherStrength: string;
+  createdAt: string;
+}
+
+export interface BitLockerRecord {
+  computerId: string;
+  computerName: string;
+  dnsHostName: string;
+  ipAddress: string;
+  operatingSystem: string;
+  loggedOnUser: string;
+  keyId: string;
+  recoveryPassword: string;
+  volumeType: string;
+  cipherStrength: string;
+  createdAt: string;
+}
+
+export interface SecurityFinding {
+  id: string;
+  severity: string;
+  category: string;
+  title: string;
+  targetName: string;
+  targetSam: string;
+  targetDn: string;
+  objectClass: string;
+  description: string;
+  recommendation: string;
+  remediationAction: string;
+  powerShellFix: string;
+  isFixed: boolean;
+}
+
+export interface JitAccessGrant {
+  id: string;
+  userId: string;
+  userSam: string;
+  userDisplayName: string;
+  groupId: string;
+  groupName: string;
+  groupDn: string;
+  grantedAt: string;
+  expiresAt: string;
+  durationMinutes: number;
+  reason: string;
+  grantedBy: string;
+  isActive: boolean;
+}
+
+export interface DomainControllerStatus {
+  name: string;
+  fqdn: string;
+  ipAddress: string;
+  siteName: string;
+  operatingSystem: string;
+  isGlobalCatalog: boolean;
+  isReadOnly: boolean;
+  isOnline: boolean;
+  fsmoRoles: string[];
+  replicationStatus: string;
+  replicationDeltaSeconds: number;
+  lastReplicationAt: string;
+  sysvolReady: boolean;
+  netlogonReady: boolean;
 }
 
 export interface RemoteProcessInfo {

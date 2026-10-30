@@ -155,6 +155,34 @@ public static class ApiHost
         app.MapGet("/api/dhcp", (IDirectoryService svc) => Results.Ok(svc.GetDhcpLeases()));
         app.MapPost("/api/dhcp/{id}/reserve", (string id, IDirectoryService svc) => Results.Ok(svc.ConvertDhcpToReservation(id)));
 
+        // Security Audit Scanner, JIT/PAM, Domain Controllers & BitLocker
+        app.MapGet("/api/security/scan", (IDirectoryService svc) => Results.Ok(svc.RunSecurityScan()));
+        app.MapPost("/api/security/fix/{id}", (string id, IDirectoryService svc) => Results.Ok(svc.FixSecurityFinding(id)));
+        app.MapGet("/api/jit", (IDirectoryService svc) => Results.Ok(svc.GetJitGrants()));
+        app.MapPost("/api/jit", (CreateJitGrantRequest req, IDirectoryService svc) => Results.Ok(svc.CreateJitGrant(req)));
+        app.MapPost("/api/jit/{id}/revoke", (string id, IDirectoryService svc) => Results.Ok(svc.RevokeJitGrant(id)));
+        app.MapGet("/api/dcs", (IDirectoryService svc) => Results.Ok(svc.GetDomainControllers()));
+        app.MapPost("/api/dcs/transfer-fsmo", (TransferFsmoRequest req, IDirectoryService svc) => Results.Ok(svc.TransferFsmoRole(req)));
+        app.MapPost("/api/dcs/sync", (IDirectoryService svc) => Results.Ok(svc.ForceDcReplication()));
+        app.MapGet("/api/bitlocker", (string? search, IDirectoryService svc) =>
+        {
+            var items = svc.GetBitLockerKeys(search).Select(x => new
+            {
+                ComputerId = x.Computer.Id,
+                ComputerName = x.Computer.Name,
+                DnsHostName = x.Computer.DnsHostName,
+                IpAddress = x.Computer.IpAddress,
+                OperatingSystem = x.Computer.OperatingSystem,
+                LoggedOnUser = x.Computer.LoggedOnUser,
+                KeyId = x.Key.KeyId,
+                RecoveryPassword = x.Key.RecoveryPassword,
+                VolumeType = x.Key.VolumeType,
+                CipherStrength = x.Key.CipherStrength,
+                CreatedAt = x.Key.CreatedAt
+            });
+            return Results.Ok(items);
+        });
+
         _app = app;
         await _app.StartAsync();
     }

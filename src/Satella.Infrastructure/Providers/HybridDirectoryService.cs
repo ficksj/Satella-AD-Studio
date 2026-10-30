@@ -67,7 +67,10 @@ public class HybridDirectoryService : IDirectoryService
             };
 
             _sandboxState = _db.Load<SandboxStateDocument>(KeySandbox) ?? SandboxSeeder.CreateInitialState();
+            SandboxSeeder.EnsureEnterpriseModulesSeeded(_sandboxState);
             _liveState = _db.Load<SandboxStateDocument>(KeyLiveCache);
+            if (_liveState != null)
+                SandboxSeeder.EnsureEnterpriseModulesSeeded(_liveState);
             _templates = _db.Load<List<OnboardingTemplate>>(KeyTemplates) ?? SandboxSeeder.CreateDefaultTemplates();
             _auditLogs = _db.Load<List<AuditActionEntry>>(KeyAudit) ?? CreateInitialAuditLogs();
 
@@ -1566,6 +1569,237 @@ public class HybridDirectoryService : IDirectoryService
             var audit = RecordAudit("DhcpReserve", lease.ScopeId, $"{lease.IpAddress} ({lease.HostName})", "dhcp", $"Аренда IP {lease.IpAddress} ({lease.ClientMac}) закреплена как статическая резервация DHCP", ps);
             PersistAll();
             return CommandResult<DhcpLease>.Ok(lease, $"IP {lease.IpAddress} закреплён за {lease.HostName} ({lease.ClientMac})", ps, audit.Id);
+        }
+    }
+
+    // ---------------------------------------------------------
+    // SECURITY AUDIT SCANNER, JIT PAM, DC HEALTH & BITLOCKER
+    // ---------------------------------------------------------
+    public List<SecurityFinding> RunSecurityScan()
+    {
+        lock (_sync)
+        {
+            SandboxSeeder.EnsureEnterpriseModulesSeeded(_state);
+            return _state.SecurityFindings.ToList();
+        }
+    }
+
+    public CommandResult<SecurityFinding> FixSecurityFinding(string findingId)
+    {
+        lock (_sync)
+        {
+            var finding = _state.SecurityFindings.FirstOrDefault(f => f.Id == findingId);
+            if (finding == null)
+                return CommandResult<SecurityFinding>.Fail("Уязвимость не найдена");
+
+            finding.IsFixed = true;
+
+            switch (finding.RemediationAction)
+            {
+                case "FixServiceAccountSpn":
+                case "DisablePasswordNeverExpires":
+                    var svcUser = _state.Users.FirstOrDefault(u => string.Equals(u.SamAccountName, finding.TargetSam, StringComparison.OrdinalIgnoreCase));
+                    if (svcUser != null)
+                    {
+                        svcUser.PasswordNeverExpires = false;
+                        svcUser.PasswordExpiresAt = DateTime.UtcNow.AddDays(90);
+                    }
+                    break;
+                case "DisableStaleComputer":
+                    var comp = _state.Computers.FirstOrDefault(c => string.Equals(c.Name, finding.TargetName, StringComparison.OrdinalIgnoreCase));
+                    if (comp != null)
+                    {
+                        comp.Enabled = false;
+                        comp.IsOnline = false;
+                    }
+                    break;
+                case "UnlockAllLockedUsers":
+                    foreach (var u in _state.Users.Where(x => x.LockedOut))
+                    {
+                        u.LockedOut = false;
+                        u.CustomAttributes["badPwdCount"] = "0";
+                    }
+                    break;
+            }
+
+            var audit = RecordAudit("SecurityRemediation", finding.TargetDn, finding.TargetName, finding.ObjectClass, $"Устранена уязвимость ИБ [{finding.Severity} / {finding.Category}]: {finding.Title}", finding.PowerShellFix);
+            PersistAll();
+            return CommandResult<SecurityFinding>.Ok(finding, $"Уязвимость «{finding.Title}» устранена", finding.PowerShellFix, audit.Id);
+        }
+    }
+
+    public List<JitAccessGrant> GetJitGrants()
+    {
+        lock (_sync)
+        {
+            SandboxSeeder.EnsureEnterpriseModulesSeeded(_state);
+            var now = DateTime.UtcNow;
+            foreach (var g in _state.JitGrants.Where(x => x.IsActive && x.ExpiresAt <= now))
+            {
+                g.IsActive = false;
+            }
+            return _state.JitGrants.OrderByDescending(g => g.IsActive).ThenByDescending(g => g.GrantedAt).ToList();
+        }
+    }
+
+    public CommandResult<JitAccessGrant> CreateJitGrant(CreateJitGrantRequest request)
+    {
+        lock (_sync)
+        {
+            var user = _state.Users.FirstOrDefault(u => u.Id == request.UserId || string.Equals(u.SamAccountName, request.UserId, StringComparison.OrdinalIgnoreCase));
+            var grp = _state.Groups.FirstOrDefault(g => g.Id == request.GroupId || string.Equals(g.SamAccountName, request.GroupId, StringComparison.OrdinalIgnoreCase));
+            if (user == null || grp == null)
+                return CommandResult<JitAccessGrant>.Fail("Пользователь или группа не найдены");
+
+            var mins = request.DurationMinutes > 0 ? request.DurationMinutes : 60;
+            var grant = new JitAccessGrant
+            {
+                Id = "jit-" + Guid.NewGuid().ToString("N")[..6],
+                UserId = user.Id,
+                UserSam = user.SamAccountName,
+                UserDisplayName = user.DisplayName,
+                GroupId = grp.Id,
+                GroupName = grp.SamAccountName,
+                GroupDn = grp.DistinguishedName,
+                GrantedAt = DateTime.UtcNow,
+                ExpiresAt = DateTime.UtcNow.AddMinutes(mins),
+                DurationMinutes = mins,
+                Reason = string.IsNullOrWhiteSpace(request.Reason) ? "Плановые работы по заявке PAM/JIT" : request.Reason,
+                GrantedBy = GetActiveProfile().Username,
+                IsActive = true
+            };
+
+            if (!user.MemberOf.Contains(grp.DistinguishedName, StringComparer.OrdinalIgnoreCase))
+            {
+                user.MemberOf.Add(grp.DistinguishedName);
+                SyncUserGroupMemberships(user);
+            }
+
+            _state.JitGrants.Insert(0, grant);
+
+            var ps = $"# Выдача временного JIT/PAM доступа в группу «{grp.SamAccountName}» на {mins} мин. (AD PAM Time-To-Live)\n$ttl = New-TimeSpan -Minutes {mins}\nAdd-ADGroupMember -Identity \"{grp.SamAccountName}\" -Members \"{user.SamAccountName}\" -MemberTimeToLive $ttl";
+            var audit = RecordAudit("GrantJitAccess", grp.DistinguishedName, $"{user.DisplayName} -> {grp.SamAccountName}", "jit", $"Выдан временный доступ JIT/PAM пользователю {user.DisplayName} в группу {grp.SamAccountName} на {mins} мин. Причина: {grant.Reason}", ps);
+            PersistAll();
+
+            return CommandResult<JitAccessGrant>.Ok(grant, $"Временный доступ в «{grp.SamAccountName}» выдан для {user.DisplayName} на {mins} мин.", ps, audit.Id);
+        }
+    }
+
+    public CommandResult<bool> RevokeJitGrant(string grantId)
+    {
+        lock (_sync)
+        {
+            var grant = _state.JitGrants.FirstOrDefault(g => g.Id == grantId);
+            if (grant == null)
+                return CommandResult<bool>.Fail("Временный доступ не найден");
+
+            grant.IsActive = false;
+            grant.ExpiresAt = DateTime.UtcNow;
+
+            var user = _state.Users.FirstOrDefault(u => u.Id == grant.UserId);
+            if (user != null)
+            {
+                user.MemberOf.RemoveAll(m => string.Equals(m, grant.GroupDn, StringComparison.OrdinalIgnoreCase));
+                SyncUserGroupMemberships(user);
+            }
+
+            var ps = $"# Досрочный отзыв временного JIT/PAM доступа\nRemove-ADGroupMember -Identity \"{grant.GroupName}\" -Members \"{grant.UserSam}\" -Confirm:$false";
+            var audit = RecordAudit("RevokeJitAccess", grant.GroupDn, $"{grant.UserDisplayName} -> {grant.GroupName}", "jit", $"Досрочно отозван временный доступ JIT/PAM у {grant.UserDisplayName} из группы {grant.GroupName}", ps);
+            PersistAll();
+
+            return CommandResult<bool>.Ok(true, $"Временный доступ {grant.UserDisplayName} в «{grant.GroupName}» отозван", ps, audit.Id);
+        }
+    }
+
+    public List<DomainControllerStatus> GetDomainControllers()
+    {
+        lock (_sync)
+        {
+            SandboxSeeder.EnsureEnterpriseModulesSeeded(_state);
+            return _state.DomainControllers.ToList();
+        }
+    }
+
+    public CommandResult<List<DomainControllerStatus>> TransferFsmoRole(TransferFsmoRequest request)
+    {
+        lock (_sync)
+        {
+            SandboxSeeder.EnsureEnterpriseModulesSeeded(_state);
+            var targetDc = _state.DomainControllers.FirstOrDefault(d => string.Equals(d.Name, request.TargetDcName, StringComparison.OrdinalIgnoreCase));
+            if (targetDc == null)
+                return CommandResult<List<DomainControllerStatus>>.Fail("Целевой контроллер домена не найден");
+
+            foreach (var dc in _state.DomainControllers)
+            {
+                dc.FsmoRoles.RemoveAll(r => string.Equals(r, request.RoleName, StringComparison.OrdinalIgnoreCase));
+            }
+            targetDc.FsmoRoles.Add(request.RoleName);
+
+            var ps = $"Move-ADDirectoryServerOperationMasterRole -Identity \"{targetDc.Name}\" -OperationMasterRole {request.RoleName} -Confirm:$false";
+            var audit = RecordAudit("TransferFSMO", targetDc.Fqdn, $"{request.RoleName} -> {targetDc.Name}", "domainController", $"Роль FSMO «{request.RoleName}» передана на контроллер домена {targetDc.Name} ({targetDc.IpAddress})", ps);
+            PersistAll();
+
+            return CommandResult<List<DomainControllerStatus>>.Ok(_state.DomainControllers.ToList(), $"Роль FSMO «{request.RoleName}» успешно передана на {targetDc.Name}", ps, audit.Id);
+        }
+    }
+
+    public CommandResult<List<DomainControllerStatus>> ForceDcReplication()
+    {
+        lock (_sync)
+        {
+            SandboxSeeder.EnsureEnterpriseModulesSeeded(_state);
+            foreach (var dc in _state.DomainControllers)
+            {
+                dc.LastReplicationAt = DateTime.UtcNow;
+                dc.ReplicationDeltaSeconds = 0;
+                dc.ReplicationStatus = "Healthy (0 errors, synced just now)";
+            }
+
+            var ps = "# Форсированная репликация всех разделов каталога AD между контроллерами домена\nrepadmin /syncall /AdeP\nrepadmin /replsummary";
+            var audit = RecordAudit("ForceReplication", SandboxSeeder.RootDn, "All Domain Controllers", "domainController", "Выполнена принудительная синхронизация репликации Active Directory (repadmin /syncall /AdeP)", ps);
+            PersistAll();
+
+            return CommandResult<List<DomainControllerStatus>>.Ok(_state.DomainControllers.ToList(), "Репликация контроллеров домена успешно синхронизирована (0 ошибок)", ps, audit.Id);
+        }
+    }
+
+    public List<(AdComputer Computer, BitLockerRecoveryKey Key)> GetBitLockerKeys(string? search = null)
+    {
+        lock (_sync)
+        {
+            SandboxSeeder.EnsureEnterpriseModulesSeeded(_state);
+            var list = new List<(AdComputer Computer, BitLockerRecoveryKey Key)>();
+            foreach (var comp in _state.Computers)
+            {
+                if (comp.BitLockerKeys == null || comp.BitLockerKeys.Count == 0)
+                {
+                    var idx = Math.Abs(comp.Name.GetHashCode()) % 899999 + 100000;
+                    comp.BitLockerKeys = new List<BitLockerRecoveryKey>
+                    {
+                        new()
+                        {
+                            KeyId = $"{idx:X8}"[..Math.Min(8, $"{idx:X8}".Length)].PadRight(8, 'A'),
+                            RecoveryPassword = $"{idx}-482910-738291-550192-384710-918273-647382-192837",
+                            VolumeType = "Operating System Drive (C:)",
+                            CipherStrength = "XTS-AES 256-bit",
+                            CreatedAt = DateTime.UtcNow.AddDays(-20)
+                        }
+                    };
+                }
+
+                foreach (var k in comp.BitLockerKeys)
+                {
+                    if (string.IsNullOrWhiteSpace(search) ||
+                        comp.Name.Contains(search, StringComparison.OrdinalIgnoreCase) ||
+                        k.KeyId.Contains(search, StringComparison.OrdinalIgnoreCase) ||
+                        k.RecoveryPassword.Contains(search, StringComparison.OrdinalIgnoreCase) ||
+                        comp.LoggedOnUser.Contains(search, StringComparison.OrdinalIgnoreCase))
+                    {
+                        list.Add((comp, k));
+                    }
+                }
+            }
+            return list;
         }
     }
 }

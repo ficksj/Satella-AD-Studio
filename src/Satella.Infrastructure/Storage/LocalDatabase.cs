@@ -15,6 +15,10 @@ public class SandboxStateDocument
     public List<DnsRecord> DnsRecords { get; set; } = new();
     public List<DhcpLease> DhcpLeases { get; set; } = new();
     public List<RecycleBinObject> RecycleBin { get; set; } = new();
+    public List<BitLockerRecoveryKey> BitLockerKeys { get; set; } = new();
+    public List<SecurityFinding> SecurityFindings { get; set; } = new();
+    public List<JitAccessGrant> JitGrants { get; set; } = new();
+    public List<DomainControllerStatus> DomainControllers { get; set; } = new();
 }
 
 public class LocalDatabase

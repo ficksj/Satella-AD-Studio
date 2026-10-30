@@ -53,6 +53,8 @@ public record DeployScriptRequest(List<string> ComputerIds, string ScriptName, s
 public record CreateDnsRecordRequest(string ZoneName, string Name, string RecordType, string Data, int TtlSeconds);
 
 public record CreateAclRuleRequest(string TargetDn, string IdentityReference, string AccessControlType, string ActiveDirectoryRights);
+public record CreateJitGrantRequest(string UserId, string GroupId, int DurationMinutes, string Reason);
+public record TransferFsmoRequest(string RoleName, string TargetDcName);
 
 public interface IDirectoryService
 {
@@ -128,5 +130,16 @@ public interface IDirectoryService
     CommandResult<bool> DeleteDnsRecord(string id);
     List<DhcpLease> GetDhcpLeases();
     CommandResult<DhcpLease> ConvertDhcpToReservation(string leaseId);
+
+    // Security Scanner, JIT PAM, DC Health/FSMO & BitLocker
+    List<SecurityFinding> RunSecurityScan();
+    CommandResult<SecurityFinding> FixSecurityFinding(string findingId);
+    List<JitAccessGrant> GetJitGrants();
+    CommandResult<JitAccessGrant> CreateJitGrant(CreateJitGrantRequest request);
+    CommandResult<bool> RevokeJitGrant(string grantId);
+    List<DomainControllerStatus> GetDomainControllers();
+    CommandResult<List<DomainControllerStatus>> TransferFsmoRole(TransferFsmoRequest request);
+    CommandResult<List<DomainControllerStatus>> ForceDcReplication();
+    List<(AdComputer Computer, BitLockerRecoveryKey Key)> GetBitLockerKeys(string? search = null);
 }
 

@@ -579,14 +579,34 @@ export const ComputersView: React.FC<Props> = ({
                     </div>
                     <div className="rounded-lg border border-zinc-800 bg-zinc-950 p-3.5">
                       <div className="text-zinc-500">
-                        Истечение срока действия (Expiration)
+                        Ключ восстановления BitLocker (msFVE)
                       </div>
-                      <div className="mt-1 font-mono text-sm font-semibold text-amber-300">
-                        {activeHost.lapsExpiration
-                          ? new Date(
-                              activeHost.lapsExpiration
-                            ).toLocaleDateString()
-                          : 'Через 14 дн.'}
+                      <div className="mt-1 flex items-center justify-between gap-2">
+                        <span className="font-mono text-xs font-semibold text-emerald-300 truncate">
+                          {activeHost.bitLockerKeys && activeHost.bitLockerKeys.length > 0
+                            ? `${activeHost.bitLockerKeys[0].keyId}: ${
+                                revealLaps[activeHost.id]
+                                  ? activeHost.bitLockerKeys[0].recoveryPassword
+                                  : '••••••-••••••-••••••-••••••'
+                              }`
+                            : 'TPM 2.0 XTS-AES 256'}
+                        </span>
+                        {activeHost.bitLockerKeys && activeHost.bitLockerKeys.length > 0 && (
+                          <button
+                            onClick={() => {
+                              navigator.clipboard.writeText(
+                                activeHost.bitLockerKeys![0].recoveryPassword
+                              );
+                              onNotify(
+                                `48-значный ключ BitLocker (${activeHost.bitLockerKeys![0].keyId}) для ${activeHost.name} скопирован`
+                              );
+                            }}
+                            title="Скопировать 48-значный ключ BitLocker"
+                            className="text-emerald-400 hover:text-emerald-200 shrink-0"
+                          >
+                            <Copy className="h-4 w-4" />
+                          </button>
+                        )}
                       </div>
                     </div>
                   </div>

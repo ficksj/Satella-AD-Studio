@@ -393,7 +393,194 @@ public static class SandboxSeeder
             }
         };
 
+        EnsureEnterpriseModulesSeeded(state);
+
         return state;
+    }
+
+    public static void EnsureEnterpriseModulesSeeded(SandboxStateDocument state)
+    {
+        if (state.BitLockerKeys.Count == 0)
+        {
+            var blIdx = 1;
+            foreach (var comp in state.Computers)
+            {
+                var keyId = $"{(10000000 + blIdx * 7919):X8}"[..8];
+                var p1 = (142081 + blIdx * 11111) % 900000 + 100000;
+                var p2 = (593012 + blIdx * 22222) % 900000 + 100000;
+                var p3 = (881920 + blIdx * 33333) % 900000 + 100000;
+                var p4 = (319044 + blIdx * 44444) % 900000 + 100000;
+                var p5 = (740192 + blIdx * 55555) % 900000 + 100000;
+                var p6 = (602918 + blIdx * 66666) % 900000 + 100000;
+                var p7 = (491827 + blIdx * 77777) % 900000 + 100000;
+                var p8 = (928371 + blIdx * 88888) % 900000 + 100000;
+
+                var keyObj = new BitLockerRecoveryKey
+                {
+                    KeyId = keyId,
+                    RecoveryPassword = $"{p1}-{p2}-{p3}-{p4}-{p5}-{p6}-{p7}-{p8}",
+                    VolumeType = comp.Name.StartsWith("SRV") ? "OS + Data Volume (C:, D:)" : "Operating System Drive (C:)",
+                    CipherStrength = "XTS-AES 256-bit (TPM 2.0)",
+                    CreatedAt = DateTime.UtcNow.AddDays(-30 - blIdx * 3)
+                };
+                comp.BitLockerKeys = new List<BitLockerRecoveryKey> { keyObj };
+                state.BitLockerKeys.Add(keyObj);
+                blIdx++;
+            }
+        }
+
+        if (state.DomainControllers.Count == 0)
+        {
+            state.DomainControllers = new List<DomainControllerStatus>
+            {
+                new()
+                {
+                    Name = "SRV-DC-01",
+                    Fqdn = "srv-dc-01.corp.satella.local",
+                    IpAddress = "10.20.1.10",
+                    SiteName = "Moscow-HQ-Site",
+                    OperatingSystem = "Windows Server 2022 Datacenter",
+                    IsGlobalCatalog = true,
+                    IsReadOnly = false,
+                    IsOnline = true,
+                    FsmoRoles = new List<string> { "SchemaMaster", "DomainNamingMaster", "PDCEmulator", "RIDMaster", "InfrastructureMaster" },
+                    ReplicationStatus = "Healthy (0 errors)",
+                    ReplicationDeltaSeconds = 2,
+                    LastReplicationAt = DateTime.UtcNow.AddMinutes(-2),
+                    SysvolReady = true,
+                    NetlogonReady = true
+                },
+                new()
+                {
+                    Name = "SRV-DC-02",
+                    Fqdn = "srv-dc-02.corp.satella.local",
+                    IpAddress = "10.20.1.11",
+                    SiteName = "Moscow-HQ-Site",
+                    OperatingSystem = "Windows Server 2022 Datacenter",
+                    IsGlobalCatalog = true,
+                    IsReadOnly = false,
+                    IsOnline = true,
+                    FsmoRoles = new List<string>(),
+                    ReplicationStatus = "Healthy (0 errors)",
+                    ReplicationDeltaSeconds = 4,
+                    LastReplicationAt = DateTime.UtcNow.AddMinutes(-2),
+                    SysvolReady = true,
+                    NetlogonReady = true
+                }
+            };
+        }
+
+        if (state.JitGrants.Count == 0)
+        {
+            var devUser = state.Users.FirstOrDefault(u => u.SamAccountName == "d.morozov");
+            var domAdmins = state.Groups.FirstOrDefault(g => g.SamAccountName == "Domain Admins");
+            if (devUser != null && domAdmins != null)
+            {
+                state.JitGrants.Add(new JitAccessGrant
+                {
+                    Id = "jit-init-1",
+                    UserId = devUser.Id,
+                    UserSam = devUser.SamAccountName,
+                    UserDisplayName = devUser.DisplayName,
+                    GroupId = domAdmins.Id,
+                    GroupName = domAdmins.SamAccountName,
+                    GroupDn = domAdmins.DistinguishedName,
+                    GrantedAt = DateTime.UtcNow.AddMinutes(-15),
+                    ExpiresAt = DateTime.UtcNow.AddMinutes(45),
+                    DurationMinutes = 60,
+                    Reason = "INC-4092: Экстренная диагностика кластера K8s и AD OIDC",
+                    GrantedBy = "CORP\\a.volkov",
+                    IsActive = true
+                });
+            }
+        }
+
+        if (state.SecurityFindings.Count == 0)
+        {
+            state.SecurityFindings = new List<SecurityFinding>
+            {
+                new()
+                {
+                    Id = "sec-1",
+                    Severity = "Critical",
+                    Category = "Kerberoasting",
+                    Title = "Риск Kerberoasting: SPN привязан к привилегированной сервисной учётке с бессрочным паролем",
+                    TargetName = "Service 1C Enterprise (svc_1c_server)",
+                    TargetSam = "svc_1c_server",
+                    TargetDn = $"CN=1C Enterprise Service,OU=Service Accounts,{RootDn}",
+                    ObjectClass = "user",
+                    Description = "Учётная запись состоит в группе 1C-Enterprise-Finance, имеет PasswordNeverExpires=True и открыта для офлайн-перебора TGS-билетов (Kerberoasting).",
+                    Recommendation = "Принудительно включить ротацию пароля, перевести на gMSA (Group Managed Service Account) и ограничить шифрование AES256.",
+                    RemediationAction = "FixServiceAccountSpn",
+                    PowerShellFix = "Set-ADUser -Identity \"svc_1c_server\" -PasswordNeverExpires $false -KerberosEncryptionType AES256",
+                    IsFixed = false
+                },
+                new()
+                {
+                    Id = "sec-2",
+                    Severity = "Critical",
+                    Category = "Privileged Hygiene",
+                    Title = "Бессрочный пароль на сервисной LDAP-учётке (PasswordNeverExpires = True)",
+                    TargetName = "Service GitLab LDAP (svc_gitlab_ldap)",
+                    TargetSam = "svc_gitlab_ldap",
+                    TargetDn = $"CN=GitLab LDAP Service,OU=Service Accounts,{RootDn}",
+                    ObjectClass = "user",
+                    Description = "Флаг DONT_EXPIRE_PASSWORD (66048) установлен на учётной записи интеграции GitLab LDAP. Пароль не менялся более 365 дней.",
+                    Recommendation = "Снять флаг PasswordNeverExpires и установить политику ротации пароля каждые 90 дней.",
+                    RemediationAction = "DisablePasswordNeverExpires",
+                    PowerShellFix = "Set-ADUser -Identity \"svc_gitlab_ldap\" -PasswordNeverExpires $false",
+                    IsFixed = false
+                },
+                new()
+                {
+                    Id = "sec-3",
+                    Severity = "High",
+                    Category = "AS-REP Roasting / Delegation",
+                    Title = "Избыточные привилегии Domain Admins у штатного архитектора (нарушение Tier-0 модели)",
+                    TargetName = "Волков Александр (a.volkov)",
+                    TargetSam = "a.volkov",
+                    TargetDn = $"CN=Волков Александр,OU=Engineering,OU=HQ Moscow,{RootDn}",
+                    ObjectClass = "user",
+                    Description = "Ежедневная рабочая учётная запись используется одновременно для почты/браузера и входит в постоянный состав группы Domain Admins.",
+                    Recommendation = "Перевести доступ в Domain Admins на временный режим JIT/PAM по таймеру и включить флаг AccountNotDelegated.",
+                    RemediationAction = "HardenAdminAccount",
+                    PowerShellFix = "Set-ADAccountControl -Identity \"a.volkov\" -AccountNotDelegated $true -SmartcardLogonRequired $false",
+                    IsFixed = false
+                },
+                new()
+                {
+                    Id = "sec-4",
+                    Severity = "Medium",
+                    Category = "Stale Objects",
+                    Title = "Заброшенный компьютер в домене (не выходил на связь > 45 дней)",
+                    TargetName = "WS-LEGACY-099",
+                    TargetSam = "WS-LEGACY-099$",
+                    TargetDn = $"CN=WS-LEGACY-099,OU=Workstations,{RootDn}",
+                    ObjectClass = "computer",
+                    Description = "Хост WS-LEGACY-099 (Windows 10 21H2) не обновлял машинный пароль 49 дней, но его учётная запись в AD остаётся активной.",
+                    Recommendation = "Отключить компьютерный объект в Active Directory и перенести в карантин.",
+                    RemediationAction = "DisableStaleComputer",
+                    PowerShellFix = "Disable-ADAccount -Identity \"WS-LEGACY-099$\"",
+                    IsFixed = false
+                },
+                new()
+                {
+                    Id = "sec-5",
+                    Severity = "Medium",
+                    Category = "Brute-Force / Lockout",
+                    Title = "Множественные блокировки привилегированных сотрудников (m.sokolova, k.smirnov, p.belov)",
+                    TargetName = "3 заблокированных аккаунта в домене",
+                    TargetSam = "m.sokolova",
+                    TargetDn = RootDn,
+                    ObjectClass = "user",
+                    Description = "Обнаружены 3 активные блокировки учётных записей (badPwdCount >= 5), включая Главного бухгалтера и DevOps-инженера.",
+                    Recommendation = "Проверить источник блокировки в журнале безопасности (Event ID 4740 / 4625) и выполнить безопасную разблокировку.",
+                    RemediationAction = "UnlockAllLockedUsers",
+                    PowerShellFix = "Search-ADAccount -LockedOut | Unlock-ADAccount",
+                    IsFixed = false
+                }
+            };
+        }
     }
 
     public static List<OnboardingTemplate> CreateDefaultTemplates() => new()
