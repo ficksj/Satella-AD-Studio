@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 140 40% 2%;
+    --foreground: 142 76% 94%;
+    --border: 145 45% 12%;
+  }
+
+  * {
+    border-color: #0f291a;
+  }
+
+  body {
+    background-color: #030805;
+    color: #d1fae5;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    user-select: none;
+  }
+}
+
+/* Custom Black & Neon Green Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #030805;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #14532d;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #22c55e;
+}

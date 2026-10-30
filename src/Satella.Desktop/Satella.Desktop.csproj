@@ -1,0 +1,34 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <AssemblyName>SatellaADStudio</AssemblyName>
+    <ApplicationIcon>monkey.ico</ApplicationIcon>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Resource Include="monkey.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2903.40" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Satella.Core\Satella.Core.csproj" />
+    <ProjectReference Include="..\Satella.Infrastructure\Satella.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="wwwroot\index.html" LogicalName="wwwroot/index.html" Condition="Exists('wwwroot\index.html')" />
+    <EmbeddedResource Include="wwwroot\assets\*" LogicalName="wwwroot/assets/%(Filename)%(Extension)" Condition="Exists('wwwroot\assets')" />
+    <Content Include="wwwroot\**\*" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Condition="Exists('wwwroot')" />
+  </ItemGroup>
+
+</Project>
