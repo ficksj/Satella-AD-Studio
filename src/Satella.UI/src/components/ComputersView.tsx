@@ -456,9 +456,10 @@ export const ComputersView: React.FC<Props> = ({
                                     false
                                   )
                                 }
-                                className="rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-1.5 text-xs text-zinc-200 hover:bg-zinc-700"
+                                className="inline-flex items-center gap-1.5 rounded-md border border-zinc-700 bg-zinc-800 px-2.5 py-1 text-xs text-zinc-200 hover:bg-zinc-700 transition"
                               >
-                                👁 Shadow (Просмотр)
+                                <Eye className="w-3.5 h-3.5 text-zinc-400" />
+                                <span>Просмотр</span>
                               </button>
                               <button
                                 onClick={() =>
@@ -469,9 +470,10 @@ export const ComputersView: React.FC<Props> = ({
                                     true
                                   )
                                 }
-                                className="rounded-lg bg-indigo-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-indigo-500"
+                                className="inline-flex items-center gap-1.5 rounded-md bg-emerald-600 px-2.5 py-1 text-xs font-medium text-white hover:bg-emerald-500 transition"
                               >
-                                🎮 Shadow (Управление)
+                                <ScreenShare className="w-3.5 h-3.5" />
+                                <span>Управление</span>
                               </button>
                             </td>
                           </tr>

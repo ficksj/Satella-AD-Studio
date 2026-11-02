@@ -315,74 +315,74 @@ export const SecurityAndPamView: React.FC<SecurityAndPamViewProps> = ({
   return (
     <div className="space-y-5">
       {/* Top Sub-Navigation */}
-      <div className="flex flex-wrap items-center justify-between gap-3 bg-slate-900/90 border border-slate-800/80 rounded-2xl p-3">
+      <div className="flex flex-wrap items-center justify-between gap-3 bg-zinc-900/60 border border-zinc-800/80 rounded-lg p-3">
         <div className="flex flex-wrap items-center gap-1.5">
           <button
             onClick={() => setSubTab('scanner')}
-            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold transition ${
+            className={`flex items-center gap-2 px-3.5 py-2 rounded-md text-xs font-semibold transition ${
               subTab === 'scanner'
-                ? 'bg-brand-600 text-white shadow-lg shadow-brand-600/25'
-                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
+                ? 'bg-zinc-800 text-white border border-zinc-700 '
+                : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50'
             }`}
           >
             <ShieldAlert className="w-4 h-4" />
             <span>Сканер уязвимостей AD</span>
-            <span className="px-1.5 py-0.5 rounded-md text-[10px] bg-black/40 text-brand-300">
+            <span className="px-1.5 py-0.5 rounded-md text-[10px] bg-black/40 text-emerald-400">
               {unfixedCount > 0 ? `${unfixedCount} угроз` : 'OK'}
             </span>
           </button>
 
           <button
             onClick={() => setSubTab('jit')}
-            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold transition ${
+            className={`flex items-center gap-2 px-3.5 py-2 rounded-md text-xs font-semibold transition ${
               subTab === 'jit'
-                ? 'bg-brand-600 text-white shadow-lg shadow-brand-600/25'
-                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
+                ? 'bg-zinc-800 text-white border border-zinc-700 '
+                : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50'
             }`}
           >
             <Clock className="w-4 h-4" />
             <span>Временный доступ (JIT / PAM)</span>
-            <span className="px-1.5 py-0.5 rounded-md text-[10px] bg-black/40 text-brand-300">
+            <span className="px-1.5 py-0.5 rounded-md text-[10px] bg-black/40 text-emerald-400">
               {jitGrants.filter((g) => g.isActive).length} актив.
             </span>
           </button>
 
           <button
             onClick={() => setSubTab('dcs')}
-            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold transition ${
+            className={`flex items-center gap-2 px-3.5 py-2 rounded-md text-xs font-semibold transition ${
               subTab === 'dcs'
-                ? 'bg-brand-600 text-white shadow-lg shadow-brand-600/25'
-                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
+                ? 'bg-zinc-800 text-white border border-zinc-700 '
+                : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50'
             }`}
           >
             <Server className="w-4 h-4" />
             <span>Контроллеры домена и FSMO</span>
-            <span className="px-1.5 py-0.5 rounded-md text-[10px] bg-black/40 text-brand-300">
+            <span className="px-1.5 py-0.5 rounded-md text-[10px] bg-black/40 text-emerald-400">
               {dcs.length} DC
             </span>
           </button>
 
           <button
             onClick={() => setSubTab('bitlocker')}
-            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold transition ${
+            className={`flex items-center gap-2 px-3.5 py-2 rounded-md text-xs font-semibold transition ${
               subTab === 'bitlocker'
-                ? 'bg-brand-600 text-white shadow-lg shadow-brand-600/25'
-                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
+                ? 'bg-zinc-800 text-white border border-zinc-700 '
+                : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50'
             }`}
           >
             <KeyRound className="w-4 h-4" />
             <span>Ключи BitLocker</span>
-            <span className="px-1.5 py-0.5 rounded-md text-[10px] bg-black/40 text-brand-300">
+            <span className="px-1.5 py-0.5 rounded-md text-[10px] bg-black/40 text-emerald-400">
               {bitlockerList.length}
             </span>
           </button>
 
           <button
             onClick={() => setSubTab('reports')}
-            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold transition ${
+            className={`flex items-center gap-2 px-3.5 py-2 rounded-md text-xs font-semibold transition ${
               subTab === 'reports'
-                ? 'bg-brand-600 text-white shadow-lg shadow-brand-600/25'
-                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
+                ? 'bg-zinc-800 text-white border border-zinc-700 '
+                : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50'
             }`}
           >
             <FileSpreadsheet className="w-4 h-4" />
@@ -393,9 +393,9 @@ export const SecurityAndPamView: React.FC<SecurityAndPamViewProps> = ({
         <button
           onClick={loadAllModuleData}
           disabled={scanning}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs text-slate-200 border border-slate-700 transition"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-zinc-800 hover:bg-zinc-700 text-xs text-zinc-200 border border-zinc-700 transition"
         >
-          <RefreshCw className={`w-3.5 h-3.5 text-brand-400 ${scanning ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`w-3.5 h-3.5 text-emerald-400 ${scanning ? 'animate-spin' : ''}`} />
           <span>Обновить аудит</span>
         </button>
       </div>
@@ -404,39 +404,39 @@ export const SecurityAndPamView: React.FC<SecurityAndPamViewProps> = ({
       {subTab === 'scanner' && (
         <div className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 flex items-center justify-between">
+            <div className="bg-zinc-900/60 border border-zinc-800 rounded-lg p-4 flex items-center justify-between">
               <div>
-                <div className="text-xs text-slate-400">Индекс защищённости AD</div>
-                <div className="text-3xl font-bold text-brand-400 mt-1">{securityScore}%</div>
-                <div className="text-[11px] text-slate-500 mt-0.5">Оценка по 5 векторам атак MITRE</div>
+                <div className="text-xs text-zinc-400">Индекс защищённости AD</div>
+                <div className="text-3xl font-bold text-emerald-400 mt-1">{securityScore}%</div>
+                <div className="text-[11px] text-zinc-500 mt-0.5">Оценка по 5 векторам атак MITRE</div>
               </div>
-              <div className="w-12 h-12 rounded-2xl bg-brand-500/10 border border-brand-500/30 flex items-center justify-center">
-                <ShieldCheck className="w-6 h-6 text-brand-400" />
+              <div className="w-12 h-12 rounded-lg bg-emerald-500/10 border border-emerald-500/25 flex items-center justify-center">
+                <ShieldCheck className="w-6 h-6 text-emerald-400" />
               </div>
             </div>
 
-            <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-4">
-              <div className="text-xs text-slate-400">Critical / Kerberoasting</div>
+            <div className="bg-zinc-900/60 border border-zinc-800 rounded-lg p-4">
+              <div className="text-xs text-zinc-400">Critical / Kerberoasting</div>
               <div className="text-2xl font-bold text-rose-400 mt-1">
                 {findings.filter((f) => !f.isFixed && f.severity === 'Critical').length}
               </div>
-              <div className="text-[11px] text-slate-500 mt-0.5">Сервисные учётки с SPN и вечным паролем</div>
+              <div className="text-[11px] text-zinc-500 mt-0.5">Сервисные учётки с SPN и вечным паролем</div>
             </div>
 
-            <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-4">
-              <div className="text-xs text-slate-400">High / Tier-0 Delegation</div>
+            <div className="bg-zinc-900/60 border border-zinc-800 rounded-lg p-4">
+              <div className="text-xs text-zinc-400">High / Tier-0 Delegation</div>
               <div className="text-2xl font-bold text-amber-400 mt-1">
                 {findings.filter((f) => !f.isFixed && f.severity === 'High').length}
               </div>
-              <div className="text-[11px] text-slate-500 mt-0.5">Постоянные права Domain Admins</div>
+              <div className="text-[11px] text-zinc-500 mt-0.5">Постоянные права Domain Admins</div>
             </div>
 
-            <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-4">
-              <div className="text-xs text-slate-400">Устранено уязвимостей</div>
+            <div className="bg-zinc-900/60 border border-zinc-800 rounded-lg p-4">
+              <div className="text-xs text-zinc-400">Устранено уязвимостей</div>
               <div className="text-2xl font-bold text-emerald-400 mt-1">
                 {findings.filter((f) => f.isFixed).length} / {findings.length}
               </div>
-              <div className="text-[11px] text-slate-500 mt-0.5">Автоматический Remediation в 1 клик</div>
+              <div className="text-[11px] text-zinc-500 mt-0.5">Автоматический Remediation в 1 клик</div>
             </div>
           </div>
 
@@ -444,10 +444,10 @@ export const SecurityAndPamView: React.FC<SecurityAndPamViewProps> = ({
             {findings.map((f) => (
               <div
                 key={f.id}
-                className={`rounded-2xl border p-4 transition ${
+                className={`rounded-lg border p-4 transition ${
                   f.isFixed
-                    ? 'bg-slate-900/40 border-slate-800/60 opacity-75'
-                    : 'bg-slate-900/95 border-slate-800 hover:border-brand-500/40'
+                    ? 'bg-zinc-900/30 border-zinc-800/60 opacity-75'
+                    : 'bg-zinc-900/70 border-zinc-800 hover:border-emerald-500/30'
                 }`}
               >
                 <div className="flex flex-wrap items-start justify-between gap-4">
@@ -466,33 +466,33 @@ export const SecurityAndPamView: React.FC<SecurityAndPamViewProps> = ({
                       >
                         {f.isFixed ? 'ИСПРАВЛЕНО' : f.severity}
                       </span>
-                      <span className="px-2 py-0.5 rounded-md text-[11px] bg-slate-800 text-slate-300 font-mono">
+                      <span className="px-2 py-0.5 rounded-md text-[11px] bg-zinc-800 text-zinc-300 font-mono">
                         {f.category}
                       </span>
-                      <span className="text-xs text-brand-400 font-mono">{f.targetName}</span>
+                      <span className="text-xs text-emerald-400 font-mono">{f.targetName}</span>
                     </div>
 
-                    <h3 className="text-sm font-semibold text-slate-100">{f.title}</h3>
-                    <p className="text-xs text-slate-400 leading-relaxed">{f.description}</p>
-                    <div className="text-xs text-slate-300 bg-black/40 border border-slate-800/80 rounded-xl p-2.5 font-mono">
-                      <span className="text-brand-400 font-semibold">PowerShell Remediation: </span>
+                    <h3 className="text-sm font-semibold text-zinc-100">{f.title}</h3>
+                    <p className="text-xs text-zinc-400 leading-relaxed">{f.description}</p>
+                    <div className="text-xs text-zinc-300 bg-black/40 border border-zinc-800/80 rounded-md p-2.5 font-mono">
+                      <span className="text-emerald-400 font-semibold">PowerShell Remediation: </span>
                       {f.powerShellFix}
                     </div>
                   </div>
 
                   <div className="flex items-center gap-2">
                     {f.isFixed ? (
-                      <span className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-xs font-semibold text-emerald-400">
+                      <span className="inline-flex items-center gap-1.5 px-3 py-2 rounded-md bg-emerald-500/10 border border-emerald-500/30 text-xs font-semibold text-emerald-400">
                         <CheckCircle2 className="w-4 h-4" />
                         Защищено
                       </span>
                     ) : (
                       <button
                         onClick={() => handleFixFinding(f.id)}
-                        className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold shadow-lg shadow-brand-600/20 transition"
+                        className="inline-flex items-center gap-2 px-4 py-2.5 rounded-md bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold  transition"
                       >
                         <Wrench className="w-4 h-4" />
-                        <span>⚡ Исправить в 1 клик</span>
+                        <span>Устранить уязвимость</span>
                       </button>
                     )}
                   </div>
@@ -508,24 +508,24 @@ export const SecurityAndPamView: React.FC<SecurityAndPamViewProps> = ({
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
           <form
             onSubmit={handleCreateJit}
-            className="bg-slate-900/95 border border-slate-800 rounded-2xl p-5 space-y-4 h-fit"
+            className="bg-zinc-900/70 border border-zinc-800 rounded-lg p-5 space-y-4 h-fit"
           >
             <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-xl bg-brand-500/15 border border-brand-500/30 flex items-center justify-center">
-                <Clock className="w-5 h-5 text-brand-400" />
+              <div className="w-9 h-9 rounded-md bg-emerald-500/10 border border-emerald-500/25 flex items-center justify-center">
+                <Clock className="w-5 h-5 text-emerald-400" />
               </div>
               <div>
-                <h3 className="text-sm font-bold text-slate-100">Выдать временный доступ (JIT)</h3>
-                <p className="text-[11px] text-slate-400">Автоматический отзыв прав по истечении таймера</p>
+                <h3 className="text-sm font-bold text-zinc-100">Выдать временный доступ (JIT)</h3>
+                <p className="text-[11px] text-zinc-400">Автоматический отзыв прав по истечении таймера</p>
               </div>
             </div>
 
             <div>
-              <label className="block text-xs text-slate-400 mb-1">Сотрудник / Инженер</label>
+              <label className="block text-xs text-zinc-400 mb-1">Сотрудник / Инженер</label>
               <select
                 value={jitUserId}
                 onChange={(e) => setJitUserId(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100"
+                className="w-full bg-zinc-950 border border-zinc-800 rounded-md px-3 py-2 text-xs text-zinc-100"
               >
                 {users.map((u) => (
                   <option key={u.id} value={u.id}>
@@ -536,11 +536,11 @@ export const SecurityAndPamView: React.FC<SecurityAndPamViewProps> = ({
             </div>
 
             <div>
-              <label className="block text-xs text-slate-400 mb-1">Целевая привилегированная группа</label>
+              <label className="block text-xs text-zinc-400 mb-1">Целевая привилегированная группа</label>
               <select
                 value={jitGroupId}
                 onChange={(e) => setJitGroupId(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100"
+                className="w-full bg-zinc-950 border border-zinc-800 rounded-md px-3 py-2 text-xs text-zinc-100"
               >
                 {groups.map((g) => (
                   <option key={g.id} value={g.id}>
@@ -551,7 +551,7 @@ export const SecurityAndPamView: React.FC<SecurityAndPamViewProps> = ({
             </div>
 
             <div>
-              <label className="block text-xs text-slate-400 mb-1">Срок действия доступа (TTL)</label>
+              <label className="block text-xs text-zinc-400 mb-1">Срок действия доступа (TTL)</label>
               <div className="grid grid-cols-4 gap-2">
                 {[
                   { mins: 15, label: '15 мин' },
@@ -563,10 +563,10 @@ export const SecurityAndPamView: React.FC<SecurityAndPamViewProps> = ({
                     type="button"
                     key={opt.mins}
                     onClick={() => setJitDuration(opt.mins)}
-                    className={`py-2 rounded-xl text-xs font-semibold border transition ${
+                    className={`py-2 rounded-md text-xs font-semibold border transition ${
                       jitDuration === opt.mins
-                        ? 'bg-brand-600/25 border-brand-500 text-brand-300'
-                        : 'bg-slate-950 border-slate-800 text-slate-400 hover:text-slate-200'
+                        ? 'bg-brand-600/25 border-emerald-500 text-emerald-400'
+                        : 'bg-zinc-950 border-zinc-800 text-zinc-400 hover:text-zinc-200'
                     }`}
                   >
                     {opt.label}
@@ -576,30 +576,30 @@ export const SecurityAndPamView: React.FC<SecurityAndPamViewProps> = ({
             </div>
 
             <div>
-              <label className="block text-xs text-slate-400 mb-1">Номер инцидента / Причина (ServiceDesk)</label>
+              <label className="block text-xs text-zinc-400 mb-1">Номер инцидента / Причина (ServiceDesk)</label>
               <input
                 type="text"
                 value={jitReason}
                 onChange={(e) => setJitReason(e.target.value)}
                 placeholder="Например: INC-5120 Обновление кластера SQL"
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100"
+                className="w-full bg-zinc-950 border border-zinc-800 rounded-md px-3 py-2 text-xs text-zinc-100"
               />
             </div>
 
             <button
               type="submit"
-              className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold shadow-lg shadow-brand-600/25 transition"
+              className="w-full flex items-center justify-center gap-2 py-2.5 rounded-md bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold  transition"
             >
               <Plus className="w-4 h-4" />
               <span>Активировать временный доступ</span>
             </button>
           </form>
 
-          <div className="lg:col-span-2 bg-slate-900/95 border border-slate-800 rounded-2xl p-5 space-y-3">
+          <div className="lg:col-span-2 bg-zinc-900/70 border border-zinc-800 rounded-lg p-5 space-y-3">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-sm font-bold text-slate-100">Активные и недавние сессии JIT / PAM</h3>
-                <p className="text-xs text-slate-400">
+                <h3 className="text-sm font-bold text-zinc-100">Активные и недавние сессии JIT / PAM</h3>
+                <p className="text-xs text-zinc-400">
                   Контроль временного членства в привилегированных группах (Zero Standing Privileges)
                 </p>
               </div>
@@ -612,10 +612,10 @@ export const SecurityAndPamView: React.FC<SecurityAndPamViewProps> = ({
                 return (
                   <div
                     key={g.id}
-                    className={`p-4 rounded-xl border flex flex-wrap items-center justify-between gap-4 ${
+                    className={`p-4 rounded-md border flex flex-wrap items-center justify-between gap-4 ${
                       active
-                        ? 'bg-slate-950/90 border-brand-500/40'
-                        : 'bg-slate-950/40 border-slate-800/60 opacity-65'
+                        ? 'bg-zinc-950/80 border-emerald-500/30'
+                        : 'bg-zinc-950/40 border-zinc-800/60 opacity-65'
                     }`}
                   >
                     <div className="space-y-1">
@@ -623,25 +623,25 @@ export const SecurityAndPamView: React.FC<SecurityAndPamViewProps> = ({
                         <span
                           className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
                             active
-                              ? 'bg-brand-500/20 text-brand-300 border border-brand-500/40'
-                              : 'bg-slate-800 text-slate-400'
+                              ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30'
+                              : 'bg-zinc-800 text-zinc-400'
                           }`}
                         >
                           {active ? `АКТИВЕН • ${rem}` : 'ОТОЗВАН / ИСТЁК'}
                         </span>
-                        <span className="text-xs font-bold text-slate-100">{g.userDisplayName}</span>
-                        <span className="text-xs text-slate-500">({g.userSam})</span>
-                        <span className="text-xs text-brand-400 font-semibold">→ {g.groupName}</span>
+                        <span className="text-xs font-bold text-zinc-100">{g.userDisplayName}</span>
+                        <span className="text-xs text-zinc-500">({g.userSam})</span>
+                        <span className="text-xs text-emerald-400 font-semibold">→ {g.groupName}</span>
                       </div>
-                      <div className="text-xs text-slate-400">
-                        Основание: <span className="text-slate-200">{g.reason}</span> • Выдал: {g.grantedBy}
+                      <div className="text-xs text-zinc-400">
+                        Основание: <span className="text-zinc-200">{g.reason}</span> • Выдал: {g.grantedBy}
                       </div>
                     </div>
 
                     {active && (
                       <button
                         onClick={() => handleRevokeJit(g.id)}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 border border-rose-500/30 text-xs font-semibold transition"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 border border-rose-500/30 text-xs font-semibold transition"
                       >
                         <XCircle className="w-3.5 h-3.5" />
                         <span>Отозвать сейчас</span>
@@ -658,19 +658,19 @@ export const SecurityAndPamView: React.FC<SecurityAndPamViewProps> = ({
       {/* 3. DOMAIN CONTROLLERS & FSMO ROLES */}
       {subTab === 'dcs' && (
         <div className="space-y-5">
-          <div className="flex flex-wrap items-center justify-between gap-3 bg-slate-900/90 border border-slate-800 rounded-2xl p-4">
+          <div className="flex flex-wrap items-center justify-between gap-3 bg-zinc-900/60 border border-zinc-800 rounded-lg p-4">
             <div>
-              <h3 className="text-sm font-bold text-slate-100">
+              <h3 className="text-sm font-bold text-zinc-100">
                 Топология контроллеров домена и репликация Active Directory
               </h3>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-zinc-400">
                 Мониторинг состояния SYSVOL/Netlogon, Global Catalog и управление 5 ролями FSMO
               </p>
             </div>
             <button
               onClick={handleForceSync}
               disabled={syncingDc}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold shadow-lg shadow-brand-600/20 transition"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold  transition"
             >
               <RefreshCw className={`w-4 h-4 ${syncingDc ? 'animate-spin' : ''}`} />
               <span>Форсировать репликацию AD (repadmin /syncall)</span>
@@ -681,42 +681,42 @@ export const SecurityAndPamView: React.FC<SecurityAndPamViewProps> = ({
             {dcs.map((dc) => (
               <div
                 key={dc.name}
-                className="bg-slate-900/95 border border-slate-800 rounded-2xl p-5 space-y-3"
+                className="bg-zinc-900/70 border border-zinc-800 rounded-lg p-5 space-y-3"
               >
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-11 h-11 rounded-2xl bg-brand-500/15 border border-brand-500/30 flex items-center justify-center">
-                      <Server className="w-6 h-6 text-brand-400" />
+                    <div className="w-11 h-11 rounded-lg bg-emerald-500/10 border border-emerald-500/25 flex items-center justify-center">
+                      <Server className="w-6 h-6 text-emerald-400" />
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
-                        <h4 className="text-base font-bold text-slate-100">{dc.name}</h4>
+                        <h4 className="text-base font-bold text-zinc-100">{dc.name}</h4>
                         <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
                           ONLINE • GC
                         </span>
                       </div>
-                      <div className="text-xs text-slate-400 font-mono">
+                      <div className="text-xs text-zinc-400 font-mono">
                         {dc.fqdn} • {dc.ipAddress}
                       </div>
                     </div>
                   </div>
-                  <span className="text-xs text-slate-400 bg-slate-800 px-2.5 py-1 rounded-lg">
+                  <span className="text-xs text-zinc-400 bg-zinc-800 px-2.5 py-1 rounded-lg">
                     Сайт: {dc.siteName}
                   </span>
                 </div>
 
                 <div className="grid grid-cols-3 gap-2 pt-1">
-                  <div className="bg-slate-950/80 border border-slate-800/80 rounded-xl p-2.5">
-                    <div className="text-[10px] text-slate-500 uppercase">Статус репликации</div>
+                  <div className="bg-zinc-950/70 border border-zinc-800/80 rounded-md p-2.5">
+                    <div className="text-[10px] text-zinc-500 uppercase">Статус репликации</div>
                     <div className="text-xs font-semibold text-emerald-400 mt-0.5">{dc.replicationStatus}</div>
                   </div>
-                  <div className="bg-slate-950/80 border border-slate-800/80 rounded-xl p-2.5">
-                    <div className="text-[10px] text-slate-500 uppercase">SYSVOL / Netlogon</div>
-                    <div className="text-xs font-semibold text-brand-300 mt-0.5">Ready & Shared</div>
+                  <div className="bg-zinc-950/70 border border-zinc-800/80 rounded-md p-2.5">
+                    <div className="text-[10px] text-zinc-500 uppercase">SYSVOL / Netlogon</div>
+                    <div className="text-xs font-semibold text-emerald-400 mt-0.5">Ready & Shared</div>
                   </div>
-                  <div className="bg-slate-950/80 border border-slate-800/80 rounded-xl p-2.5">
-                    <div className="text-[10px] text-slate-500 uppercase">Удерживает ролей FSMO</div>
-                    <div className="text-xs font-bold text-slate-100 mt-0.5">{dc.fsmoRoles.length} из 5</div>
+                  <div className="bg-zinc-950/70 border border-zinc-800/80 rounded-md p-2.5">
+                    <div className="text-[10px] text-zinc-500 uppercase">Удерживает ролей FSMO</div>
+                    <div className="text-xs font-bold text-zinc-100 mt-0.5">{dc.fsmoRoles.length} из 5</div>
                   </div>
                 </div>
 
@@ -725,13 +725,13 @@ export const SecurityAndPamView: React.FC<SecurityAndPamViewProps> = ({
                     dc.fsmoRoles.map((r) => (
                       <span
                         key={r}
-                        className="px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-brand-500/15 text-brand-300 border border-brand-500/30"
+                        className="px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/25"
                       >
-                        ★ {r}
+                        {r}
                       </span>
                     ))
                   ) : (
-                    <span className="text-xs text-slate-500 italic">
+                    <span className="text-xs text-zinc-500 italic">
                       Резервный контроллер домена (готовый принять роли FSMO)
                     </span>
                   )}
@@ -741,9 +741,9 @@ export const SecurityAndPamView: React.FC<SecurityAndPamViewProps> = ({
           </div>
 
           {/* FSMO Role Transfer Matrix */}
-          <div className="bg-slate-900/95 border border-slate-800 rounded-2xl p-5 space-y-3">
-            <h3 className="text-sm font-bold text-slate-100 flex items-center gap-2">
-              <ArrowRightLeft className="w-4 h-4 text-brand-400" />
+          <div className="bg-zinc-900/70 border border-zinc-800 rounded-lg p-5 space-y-3">
+            <h3 className="text-sm font-bold text-zinc-100 flex items-center gap-2">
+              <ArrowRightLeft className="w-4 h-4 text-emerald-400" />
               <span>Управление 5 ролями FSMO (Operation Master Roles)</span>
             </h3>
             <div className="divide-y divide-slate-800/80">
@@ -755,12 +755,12 @@ export const SecurityAndPamView: React.FC<SecurityAndPamViewProps> = ({
                     className="py-3 flex flex-wrap items-center justify-between gap-4"
                   >
                     <div>
-                      <div className="text-xs font-bold text-slate-100">{role.label}</div>
-                      <div className="text-[11px] text-slate-400">{role.desc}</div>
+                      <div className="text-xs font-bold text-zinc-100">{role.label}</div>
+                      <div className="text-[11px] text-zinc-400">{role.desc}</div>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-xs text-slate-400">Текущий владелец:</span>
-                      <span className="px-2.5 py-1 rounded-lg bg-brand-500/15 border border-brand-500/30 text-xs font-bold text-brand-300 font-mono">
+                      <span className="text-xs text-zinc-400">Текущий владелец:</span>
+                      <span className="px-2.5 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/25 text-xs font-bold text-emerald-400 font-mono">
                         {holder?.name || 'SRV-DC-01'}
                       </span>
                       {dcs
@@ -769,7 +769,7 @@ export const SecurityAndPamView: React.FC<SecurityAndPamViewProps> = ({
                           <button
                             key={target.name}
                             onClick={() => handleTransferFsmo(role.id, target.name)}
-                            className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-brand-600 text-slate-200 hover:text-white text-xs font-semibold border border-slate-700 transition"
+                            className="px-3 py-1.5 rounded-md bg-zinc-800 hover:bg-brand-600 text-zinc-200 hover:text-white text-xs font-semibold border border-zinc-700 transition"
                           >
                             Передать на {target.name}
                           </button>
@@ -785,24 +785,24 @@ export const SecurityAndPamView: React.FC<SecurityAndPamViewProps> = ({
 
       {/* 4. BITLOCKER RECOVERY KEYS */}
       {subTab === 'bitlocker' && (
-        <div className="bg-slate-900/95 border border-slate-800 rounded-2xl p-5 space-y-4">
+        <div className="bg-zinc-900/70 border border-zinc-800 rounded-lg p-5 space-y-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <h3 className="text-sm font-bold text-slate-100">
+              <h3 className="text-sm font-bold text-zinc-100">
                 Хранилище ключей восстановления BitLocker в Active Directory (msFVE-RecoveryInformation)
               </h3>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-zinc-400">
                 Мгновенный поиск 48-значного ключа восстановления по первым 8 символам Key ID или имени ПК
               </p>
             </div>
             <div className="relative w-80">
-              <Search className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
+              <Search className="w-4 h-4 text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 value={blSearch}
                 onChange={(e) => setBlSearch(e.target.value)}
                 placeholder="Поиск по Key ID (напр. 10001EEF) или ПК..."
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-100"
+                className="w-full bg-zinc-950 border border-zinc-800 rounded-md pl-9 pr-3 py-2 text-xs text-zinc-100"
               />
             </div>
           </div>
@@ -810,7 +810,7 @@ export const SecurityAndPamView: React.FC<SecurityAndPamViewProps> = ({
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-slate-800 text-[11px] text-slate-400 uppercase">
+                <tr className="border-b border-zinc-800 text-[11px] text-zinc-400 uppercase">
                   <th className="py-2.5 px-3">Хост / Компьютер</th>
                   <th className="py-2.5 px-3">Текущий пользователь</th>
                   <th className="py-2.5 px-3">Идентификатор ключа (Key ID)</th>
@@ -823,33 +823,33 @@ export const SecurityAndPamView: React.FC<SecurityAndPamViewProps> = ({
                 {filteredBitLocker.map((item) => {
                   const isShown = !!revealedKeys[item.keyId];
                   return (
-                    <tr key={`${item.computerId}-${item.keyId}`} className="hover:bg-slate-800/40">
-                      <td className="py-3 px-3 font-semibold text-slate-100">
+                    <tr key={`${item.computerId}-${item.keyId}`} className="hover:bg-zinc-800/40">
+                      <td className="py-3 px-3 font-semibold text-zinc-100">
                         <div>{item.computerName}</div>
-                        <div className="text-[11px] text-slate-500 font-mono">{item.ipAddress}</div>
+                        <div className="text-[11px] text-zinc-500 font-mono">{item.ipAddress}</div>
                       </td>
-                      <td className="py-3 px-3 text-slate-300 font-mono">
+                      <td className="py-3 px-3 text-zinc-300 font-mono">
                         {item.loggedOnUser || '—'}
                       </td>
                       <td className="py-3 px-3">
-                        <span className="px-2 py-1 rounded-md bg-brand-500/15 border border-brand-500/30 text-brand-300 font-mono font-bold">
+                        <span className="px-2 py-1 rounded-md bg-emerald-500/10 border border-emerald-500/25 text-emerald-400 font-mono font-bold">
                           {item.keyId}
                         </span>
                       </td>
                       <td className="py-3 px-3 font-mono">
                         {isShown ? (
-                          <span className="text-brand-400 font-bold tracking-wider">
+                          <span className="text-emerald-400 font-bold tracking-wider">
                             {item.recoveryPassword}
                           </span>
                         ) : (
-                          <span className="text-slate-500">
+                          <span className="text-zinc-500">
                             ••••••-••••••-••••••-••••••-••••••-••••••-••••••-••••••
                           </span>
                         )}
                       </td>
-                      <td className="py-3 px-3 text-slate-400">
+                      <td className="py-3 px-3 text-zinc-400">
                         <div>{item.volumeType}</div>
-                        <div className="text-[10px] text-slate-500">{item.cipherStrength}</div>
+                        <div className="text-[10px] text-zinc-500">{item.cipherStrength}</div>
                       </td>
                       <td className="py-3 px-3 text-right">
                         <div className="inline-flex items-center gap-1.5">
@@ -857,7 +857,7 @@ export const SecurityAndPamView: React.FC<SecurityAndPamViewProps> = ({
                             onClick={() =>
                               setRevealedKeys((prev) => ({ ...prev, [item.keyId]: !prev[item.keyId] }))
                             }
-                            className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300"
+                            className="p-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300"
                             title={isShown ? 'Скрыть ключ' : 'Показать ключ'}
                           >
                             {isShown ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
@@ -869,7 +869,7 @@ export const SecurityAndPamView: React.FC<SecurityAndPamViewProps> = ({
                                 `Ключ восстановления BitLocker (${item.keyId}) для ${item.computerName} скопирован в буфер обмена`
                               );
                             }}
-                            className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-brand-600/20 hover:bg-brand-600 text-brand-300 hover:text-white border border-brand-500/30 transition"
+                            className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-brand-600/20 hover:bg-brand-600 text-emerald-400 hover:text-white border border-emerald-500/25 transition"
                           >
                             <Copy className="w-3.5 h-3.5" />
                             <span>Копировать</span>
@@ -888,66 +888,66 @@ export const SecurityAndPamView: React.FC<SecurityAndPamViewProps> = ({
       {/* 5. COMPLIANCE & EXECUTIVE REPORTS */}
       {subTab === 'reports' && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-slate-900/95 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between space-y-4">
+          <div className="bg-zinc-900/70 border border-zinc-800 rounded-lg p-5 flex flex-col justify-between space-y-4">
             <div className="space-y-2">
-              <div className="w-11 h-11 rounded-2xl bg-brand-500/15 border border-brand-500/30 flex items-center justify-center">
-                <FileCode2 className="w-6 h-6 text-brand-400" />
+              <div className="w-11 h-11 rounded-lg bg-emerald-500/10 border border-emerald-500/25 flex items-center justify-center">
+                <FileCode2 className="w-6 h-6 text-emerald-400" />
               </div>
-              <h3 className="text-base font-bold text-slate-100">
+              <h3 className="text-base font-bold text-zinc-100">
                 Сводный HTML-отчёт ИБ для руководства (Executive Audit)
               </h3>
-              <p className="text-xs text-slate-400 leading-relaxed">
+              <p className="text-xs text-zinc-400 leading-relaxed">
                 Красивый интерактивный HTML-документ в фирменном стиле Crazy Monkeys: индекс безопасности домена,
                 найденные уязвимости, матрица привилегированных групп и статус контроллеров домена.
               </p>
             </div>
             <button
               onClick={exportHtmlExecutiveReport}
-              className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold shadow-lg shadow-brand-600/25 transition"
+              className="w-full flex items-center justify-center gap-2 py-2.5 rounded-md bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold  transition"
             >
               <Sparkles className="w-4 h-4" />
               <span>Скачать HTML-отчёт ИБ</span>
             </button>
           </div>
 
-          <div className="bg-slate-900/95 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between space-y-4">
+          <div className="bg-zinc-900/70 border border-zinc-800 rounded-lg p-5 flex flex-col justify-between space-y-4">
             <div className="space-y-2">
-              <div className="w-11 h-11 rounded-2xl bg-brand-500/15 border border-brand-500/30 flex items-center justify-center">
-                <FileSpreadsheet className="w-6 h-6 text-brand-400" />
+              <div className="w-11 h-11 rounded-lg bg-emerald-500/10 border border-emerald-500/25 flex items-center justify-center">
+                <FileSpreadsheet className="w-6 h-6 text-emerald-400" />
               </div>
-              <h3 className="text-base font-bold text-slate-100">
+              <h3 className="text-base font-bold text-zinc-100">
                 Реестр учётных записей и парольной политики (CSV / Excel)
               </h3>
-              <p className="text-xs text-slate-400 leading-relaxed">
+              <p className="text-xs text-zinc-400 leading-relaxed">
                 Полная выгрузка всех пользователей домена ({users.length} чел.) с отделами, должностями, статусами
                 блокировки, флагом PasswordNeverExpires и количеством групп.
               </p>
             </div>
             <button
               onClick={exportUsersCsv}
-              className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-slate-800 hover:bg-brand-600 text-slate-100 hover:text-white border border-slate-700 text-xs font-semibold transition"
+              className="w-full flex items-center justify-center gap-2 py-2.5 rounded-md bg-zinc-800 hover:bg-brand-600 text-zinc-100 hover:text-white border border-zinc-700 text-xs font-semibold transition"
             >
               <Download className="w-4 h-4" />
               <span>Экспортировать пользователей (.CSV)</span>
             </button>
           </div>
 
-          <div className="bg-slate-900/95 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between space-y-4">
+          <div className="bg-zinc-900/70 border border-zinc-800 rounded-lg p-5 flex flex-col justify-between space-y-4">
             <div className="space-y-2">
-              <div className="w-11 h-11 rounded-2xl bg-brand-500/15 border border-brand-500/30 flex items-center justify-center">
-                <KeyRound className="w-6 h-6 text-brand-400" />
+              <div className="w-11 h-11 rounded-lg bg-emerald-500/10 border border-emerald-500/25 flex items-center justify-center">
+                <KeyRound className="w-6 h-6 text-emerald-400" />
               </div>
-              <h3 className="text-base font-bold text-slate-100">
+              <h3 className="text-base font-bold text-zinc-100">
                 Аудит защищённости рабочих станций, LAPS и BitLocker (CSV)
               </h3>
-              <p className="text-xs text-slate-400 leading-relaxed">
+              <p className="text-xs text-zinc-400 leading-relaxed">
                 Выгрузка всех серверов и рабочих станций ({computers.length} хостов), статус покрытия Windows LAPS
                 и резервная таблица идентификаторов и ключей BitLocker.
               </p>
             </div>
             <button
               onClick={exportHostsBitLockerCsv}
-              className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-slate-800 hover:bg-brand-600 text-slate-100 hover:text-white border border-slate-700 text-xs font-semibold transition"
+              className="w-full flex items-center justify-center gap-2 py-2.5 rounded-md bg-zinc-800 hover:bg-brand-600 text-zinc-100 hover:text-white border border-zinc-700 text-xs font-semibold transition"
             >
               <Download className="w-4 h-4" />
               <span>Экспортировать LAPS & BitLocker (.CSV)</span>

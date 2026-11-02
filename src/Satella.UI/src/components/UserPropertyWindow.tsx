@@ -275,7 +275,7 @@ export const UserPropertyWindow: React.FC<Props> = ({
         top: `${pos.y}px`,
         zIndex,
       }}
-      className="fixed w-[640px] h-[690px] rounded-2xl border border-zinc-700/90 bg-zinc-950 shadow-2xl shadow-black/90 flex flex-col overflow-hidden"
+      className="fixed w-[640px] h-[690px] rounded-lg border border-zinc-700 bg-zinc-950 shadow-2xl shadow-black/80 flex flex-col overflow-hidden"
     >
       {/* Draggable Window Title Bar (classic dsa.msc Properties header) */}
       <div

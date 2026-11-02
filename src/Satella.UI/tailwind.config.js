@@ -1,32 +1,4 @@
 /** @type {import('tailwindcss').Config} */
-const sharedNeutralPalette = {
-  50: '#f8faf9',
-  100: '#f1f5f3',
-  200: '#e2e8e5',
-  300: '#cbd5d0',
-  400: '#94a39b',
-  500: '#64746c',
-  600: '#47554e',
-  700: '#28322d',
-  800: '#1b221f',
-  900: '#111614',
-  950: '#0a0d0c',
-};
-
-const brandEmeraldPalette = {
-  50: '#ecfdf5',
-  100: '#d1fae5',
-  200: '#a7f3d0',
-  300: '#6ee7b7',
-  400: '#34d399',
-  500: '#10b981',
-  600: '#059669',
-  700: '#047857',
-  800: '#065f46',
-  900: '#064e3b',
-  950: '#022c22',
-};
-
 export default {
   darkMode: 'class',
   content: [
@@ -36,21 +8,80 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Eye-friendly matte carbon-obsidian surfaces & crisp neutral-sage text
-        zinc: sharedNeutralPalette,
-        slate: sharedNeutralPalette,
-        // Intentional, refined Emerald accent for buttons, active states & highlights
-        brand: brandEmeraldPalette,
-        indigo: brandEmeraldPalette,
-        violet: {
+        // True neutral dark palette (Linear / Raycast / Datadog dark theme)
+        zinc: {
+          50: '#fafafa',
+          100: '#f4f4f5',
+          200: '#e4e4e7',
+          300: '#d4d4d8',
+          400: '#a1a1aa',
+          500: '#71717a',
+          600: '#52525b',
+          700: '#3f3f46',
+          800: '#27272a',
+          850: '#202023',
+          900: '#18181b',
+          925: '#141416',
+          950: '#0e0e11',
+          975: '#09090b',
+        },
+        slate: {
+          50: '#f8fafc',
+          100: '#f1f5f9',
+          200: '#e2e8f0',
+          300: '#cbd5e1',
+          400: '#94a3b8',
+          500: '#64748b',
+          600: '#475569',
+          700: '#334155',
+          800: '#1e293b',
+          900: '#0f172a',
+          950: '#080c14',
+        },
+        // Precision emerald accent — restrained, enterprise-grade, non-radioactive
+        brand: {
+          50: '#ecfdf5',
+          100: '#d1fae5',
+          200: '#a7f3d0',
+          300: '#6ee7b7',
           400: '#34d399',
           500: '#10b981',
           600: '#059669',
+          700: '#047857',
+          800: '#065f46',
+          900: '#064e3b',
+        },
+        indigo: {
+          50: '#ecfdf5',
+          100: '#d1fae5',
+          200: '#a7f3d0',
+          300: '#6ee7b7',
+          400: '#34d399',
+          500: '#10b981',
+          600: '#059669',
+          700: '#047857',
+          800: '#065f46',
+          900: '#064e3b',
         },
       },
       fontFamily: {
-        sans: ['Inter', 'Segoe UI Variable Display', 'Segoe UI', 'system-ui', 'sans-serif'],
-        mono: ['JetBrains Mono', 'Cascadia Code', 'Consolas', 'monospace'],
+        sans: [
+          '-apple-system',
+          'BlinkMacSystemFont',
+          '"Segoe UI"',
+          'Roboto',
+          'Helvetica',
+          'Arial',
+          'sans-serif',
+        ],
+        mono: [
+          '"Cascadia Code"',
+          '"JetBrains Mono"',
+          'Consolas',
+          '"SF Mono"',
+          'Menlo',
+          'monospace',
+        ],
       },
       gridTemplateColumns: {
         24: 'repeat(24, minmax(0, 1fr))',

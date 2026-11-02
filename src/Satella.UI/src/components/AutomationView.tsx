@@ -139,9 +139,9 @@ export const AutomationView: React.FC<Props> = ({
 
         <button
           onClick={openNewTemplateModal}
-          className="flex items-center gap-1.5 rounded-xl bg-indigo-600 px-4 py-2 text-xs font-semibold text-white hover:bg-indigo-500 shadow-lg shadow-indigo-600/20 transition"
+          className="flex items-center gap-1.5 rounded-md bg-emerald-600 px-3.5 py-2 text-xs font-medium text-white hover:bg-emerald-500 transition"
         >
-          <Plus className="h-4 w-4" /> Создать свой шаблон роли
+          <Plus className="h-4 w-4" /> Создать шаблон роли
         </button>
       </div>
 
@@ -350,10 +350,9 @@ export const AutomationView: React.FC<Props> = ({
                       password,
                     })
                   }
-                  className="flex items-center gap-2 rounded-xl bg-indigo-600 px-6 py-2.5 text-xs font-semibold text-white hover:bg-indigo-500 shadow-lg shadow-indigo-600/20 transition"
+                  className="flex items-center gap-2 rounded-md bg-emerald-600 px-5 py-2.5 text-xs font-medium text-white hover:bg-emerald-500 transition"
                 >
                   <UserPlus className="h-4 w-4" /> Создать сотрудника по шаблону
-                  в 1 клик
                 </button>
               </div>
             </div>

@@ -282,14 +282,13 @@ export const DirectoryExplorerView: React.FC<Props> = ({
           {ouTree.map((root) => renderOuNode(root, 0))}
         </div>
 
-        <div className="border-t border-zinc-800/80 bg-zinc-900/30 p-2.5 text-[11px] text-zinc-500 leading-tight space-y-1">
+        <div className="border-t border-zinc-800 bg-zinc-900/40 p-2.5 text-[11px] text-zinc-500 leading-tight space-y-1">
           <div>
-            💡 Перетащите пользователя на папку OU для перемещения (
-            <code className="text-indigo-400">Move-ADObject</code>).
+            Перетащите пользователя на папку OU для перемещения (
+            <code className="text-emerald-400">Move-ADObject</code>).
           </div>
           <div className="text-zinc-400">
-            🪟 Клик по строке открывает отдельное плавающее окно свойств (можно
-            открыть сразу несколько юзеров!).
+            Клик по строке открывает отдельное окно свойств AD (поддерживается несколько окон одновременно).
           </div>
         </div>
       </div>

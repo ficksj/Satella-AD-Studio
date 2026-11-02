@@ -12,14 +12,14 @@
         MinHeight="680"
         MinWidth="1100"
         WindowStartupLocation="CenterScreen"
-        Background="#0A0D0C">
-    <Grid Background="#0A0D0C">
-        <wv2:WebView2 x:Name="BrowserView" DefaultBackgroundColor="#FF0A0D0C" />
-        <Border x:Name="LoadingOverlay" Background="#0A0D0C" Visibility="Visible">
+        Background="#0C0D10">
+    <Grid Background="#0C0D10">
+        <wv2:WebView2 x:Name="BrowserView" DefaultBackgroundColor="#FF0C0D10" />
+        <Border x:Name="LoadingOverlay" Background="#0C0D10" Visibility="Visible">
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                <TextBlock Text="SATELLA AD STUDIO" Foreground="#F1F5F3" FontSize="22" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,6"/>
-                <TextBlock Text="Сделано командой Crazy Monkeys" Foreground="#34D399" FontSize="14" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,0,0,8"/>
-                <TextBlock Text="Инициализация ядра Active Directory..." Foreground="#94A39B" FontSize="12" HorizontalAlignment="Center"/>
+                <TextBlock Text="SATELLA AD STUDIO" Foreground="#F4F4F5" FontSize="20" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,0,0,6"/>
+                <TextBlock Text="Сделано командой Crazy Monkeys" Foreground="#10B981" FontSize="13" FontWeight="Medium" HorizontalAlignment="Center" Margin="0,0,0,8"/>
+                <TextBlock Text="Инициализация каталога Active Directory..." Foreground="#71717A" FontSize="12" HorizontalAlignment="Center"/>
             </StackPanel>
         </Border>
     </Grid>

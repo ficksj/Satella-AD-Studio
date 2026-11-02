@@ -206,21 +206,21 @@ Unlock-ADAccount -Identity "${u.samAccountName}"`;
             }
             setDraggedUserId(null);
           }}
-          className={`rounded-xl border p-3.5 transition cursor-grab active:cursor-grabbing ${
+          className={`rounded-md border p-3.5 transition cursor-grab active:cursor-grabbing ${
             matchesSearch && orgSearch.trim()
-              ? 'border-indigo-500 bg-indigo-500/15 shadow-lg'
+              ? 'border-indigo-500 bg-emerald-500/10 shadow-lg'
               : level === 0
-              ? 'border-indigo-500/40 bg-zinc-900/90'
+              ? 'border-emerald-500/30 bg-zinc-900/90'
               : 'border-zinc-800 bg-zinc-900/50 hover:border-zinc-700'
           }`}
         >
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-3">
               <div
-                className={`flex h-9 w-9 items-center justify-center rounded-xl font-bold text-xs ${
+                className={`flex h-9 w-9 items-center justify-center rounded-md font-bold text-xs ${
                   level === 0
-                    ? 'bg-indigo-600 text-white'
-                    : 'bg-zinc-800 text-indigo-300 border border-zinc-700'
+                    ? 'bg-emerald-600 text-white'
+                    : 'bg-zinc-800 text-emerald-400 border border-zinc-700'
                 }`}
               >
                 {person.surname[0]}
@@ -240,7 +240,7 @@ Unlock-ADAccount -Identity "${u.samAccountName}"`;
                     </span>
                   )}
                   {reports.length > 0 && (
-                    <span className="rounded bg-indigo-500/15 border border-indigo-500/30 px-1.5 py-0.5 text-[10px] font-medium text-indigo-300">
+                    <span className="rounded bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.5 text-[10px] font-medium text-emerald-400">
                       Подчинённых: {reports.length}
                     </span>
                   )}
@@ -278,7 +278,7 @@ Unlock-ADAccount -Identity "${u.samAccountName}"`;
                 onClick={() => onOpenUserWindow(person)}
                 className="flex items-center gap-1 rounded-lg border border-zinc-700 bg-zinc-800 px-2.5 py-1 text-[11px] font-medium text-zinc-200 hover:bg-zinc-700"
               >
-                <ExternalLink className="h-3 w-3 text-indigo-400" /> Карточка AD
+                <ExternalLink className="h-3 w-3 text-emerald-400" /> Карточка AD
               </button>
             </div>
           </div>
@@ -317,9 +317,9 @@ Unlock-ADAccount -Identity "${u.samAccountName}"`;
         <div className="flex flex-wrap items-center gap-2">
           <button
             onClick={() => setSubTab('forensics')}
-            className={`flex items-center gap-2 rounded-xl px-3.5 py-2 text-xs font-semibold transition ${
+            className={`flex items-center gap-2 rounded-md px-3.5 py-2 text-xs font-semibold transition ${
               subTab === 'forensics'
-                ? 'bg-indigo-600 text-white shadow-sm'
+                ? 'bg-emerald-600 text-white shadow-sm'
                 : 'bg-zinc-900 text-zinc-400 hover:text-zinc-200 border border-zinc-800'
             }`}
           >
@@ -332,9 +332,9 @@ Unlock-ADAccount -Identity "${u.samAccountName}"`;
 
           <button
             onClick={() => setSubTab('orgchart')}
-            className={`flex items-center gap-2 rounded-xl px-3.5 py-2 text-xs font-semibold transition ${
+            className={`flex items-center gap-2 rounded-md px-3.5 py-2 text-xs font-semibold transition ${
               subTab === 'orgchart'
-                ? 'bg-indigo-600 text-white shadow-sm'
+                ? 'bg-emerald-600 text-white shadow-sm'
                 : 'bg-zinc-900 text-zinc-400 hover:text-zinc-200 border border-zinc-800'
             }`}
           >
@@ -344,9 +344,9 @@ Unlock-ADAccount -Identity "${u.samAccountName}"`;
 
           <button
             onClick={() => setSubTab('graph')}
-            className={`flex items-center gap-2 rounded-xl px-3.5 py-2 text-xs font-semibold transition ${
+            className={`flex items-center gap-2 rounded-md px-3.5 py-2 text-xs font-semibold transition ${
               subTab === 'graph'
-                ? 'bg-indigo-600 text-white shadow-sm'
+                ? 'bg-emerald-600 text-white shadow-sm'
                 : 'bg-zinc-900 text-zinc-400 hover:text-zinc-200 border border-zinc-800'
             }`}
           >
@@ -356,9 +356,9 @@ Unlock-ADAccount -Identity "${u.samAccountName}"`;
 
           <button
             onClick={() => setSubTab('pso')}
-            className={`flex items-center gap-2 rounded-xl px-3.5 py-2 text-xs font-semibold transition ${
+            className={`flex items-center gap-2 rounded-md px-3.5 py-2 text-xs font-semibold transition ${
               subTab === 'pso'
-                ? 'bg-indigo-600 text-white shadow-sm'
+                ? 'bg-emerald-600 text-white shadow-sm'
                 : 'bg-zinc-900 text-zinc-400 hover:text-zinc-200 border border-zinc-800'
             }`}
           >
@@ -373,18 +373,18 @@ Unlock-ADAccount -Identity "${u.samAccountName}"`;
         {/* 1. LOCKOUT FORENSICS (Детектор причины блокировки учётки — Event ID 4740) */}
         {subTab === 'forensics' && (
           <div className="space-y-5">
-            <div className="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-5 flex flex-wrap items-center justify-between gap-4">
+            <div className="rounded-lg border border-zinc-800 bg-zinc-900/60 p-5 flex flex-wrap items-center justify-between gap-4">
               <div>
                 <h2 className="text-sm font-bold text-zinc-100">
                   Криминалистика блокировок учётных записей (Account Lockout Forensics — Event ID 4740 / 4625)
                 </h2>
                 <p className="text-xs text-zinc-400 mt-0.5">
-                  Анализ журналов безопасности эмулятора PDC (<code className="text-indigo-300">SRV-DC-01</code>):
+                  Анализ журналов безопасности эмулятора PDC (<code className="text-emerald-400">SRV-DC-01</code>):
                   определение точного хоста, IP-адреса и процесса (RDP, Wi-Fi 802.1X, 1С, SMB), который блокирует пароль сотрудника.
                 </p>
               </div>
               <div className="flex items-center gap-3">
-                <div className="rounded-xl border border-zinc-800 bg-zinc-950 px-3.5 py-2 text-xs">
+                <div className="rounded-md border border-zinc-800 bg-zinc-950 px-3.5 py-2 text-xs">
                   <span className="text-zinc-400">Активных блокировок: </span>
                   <span className="font-bold text-rose-400">{lockedUsers.length}</span>
                 </div>
@@ -392,7 +392,7 @@ Unlock-ADAccount -Identity "${u.samAccountName}"`;
             </div>
 
             {lockedUsers.length === 0 ? (
-              <div className="rounded-2xl border border-zinc-800 bg-zinc-900/40 p-10 text-center space-y-2">
+              <div className="rounded-lg border border-zinc-800 bg-zinc-900/40 p-10 text-center space-y-2">
                 <CheckCircle2 className="h-10 w-10 text-emerald-400 mx-auto" />
                 <div className="text-sm font-bold text-zinc-100">
                   В домене нет заблокированных учётных записей!
@@ -422,7 +422,7 @@ Unlock-ADAccount -Identity "${u.samAccountName}"`;
                   return (
                     <div
                       key={u.id}
-                      className="rounded-2xl border border-rose-500/30 bg-zinc-900/80 p-5 space-y-4"
+                      className="rounded-lg border border-rose-500/30 bg-zinc-900/80 p-5 space-y-4"
                     >
                       <div className="flex flex-wrap items-start justify-between gap-4">
                         <div className="space-y-1">
@@ -446,22 +446,22 @@ Unlock-ADAccount -Identity "${u.samAccountName}"`;
                         <div className="flex items-center gap-2">
                           <button
                             onClick={() => onOpenUserWindow(u)}
-                            className="rounded-xl border border-zinc-700 bg-zinc-800 px-3 py-2 text-xs font-medium text-zinc-200 hover:bg-zinc-700"
+                            className="rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2 text-xs font-medium text-zinc-200 hover:bg-zinc-700"
                           >
                             Свойства AD
                           </button>
                           <button
                             onClick={() => handleForensicRemediation(u)}
-                            className="flex items-center gap-1.5 rounded-xl bg-indigo-600 px-4 py-2 text-xs font-semibold text-white hover:bg-indigo-500 shadow-sm transition"
+                            className="flex items-center gap-1.5 rounded-md bg-emerald-600 px-3.5 py-2 text-xs font-medium text-white hover:bg-emerald-500 transition"
                           >
                             <Unlock className="h-4 w-4" />
-                            <span>⚡ Сбросить источник и Разблокировать</span>
+                            <span>Сбросить сессии и разблокировать</span>
                           </button>
                         </div>
                       </div>
 
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
-                        <div className="rounded-xl border border-zinc-800 bg-zinc-950 p-3">
+                        <div className="rounded-md border border-zinc-800 bg-zinc-950 p-3">
                           <div className="text-[10px] uppercase text-zinc-500">
                             Узел-источник блокировки (Caller Computer)
                           </div>
@@ -471,17 +471,17 @@ Unlock-ADAccount -Identity "${u.samAccountName}"`;
                           </div>
                         </div>
 
-                        <div className="rounded-xl border border-zinc-800 bg-zinc-950 p-3">
+                        <div className="rounded-md border border-zinc-800 bg-zinc-950 p-3">
                           <div className="text-[10px] uppercase text-zinc-500">
                             Процесс / Служба авторизации
                           </div>
                           <div className="mt-1 flex items-center gap-2 font-medium text-zinc-100">
-                            <Wifi className="h-3.5 w-3.5 text-indigo-400" />
+                            <Wifi className="h-3.5 w-3.5 text-emerald-400" />
                             {service}
                           </div>
                         </div>
 
-                        <div className="rounded-xl border border-zinc-800 bg-zinc-950 p-3">
+                        <div className="rounded-md border border-zinc-800 bg-zinc-950 p-3">
                           <div className="text-[10px] uppercase text-zinc-500">
                             Рекомендуемое действие
                           </div>
@@ -502,13 +502,13 @@ Unlock-ADAccount -Identity "${u.samAccountName}"`;
         {/* 2. INTERACTIVE ORG CHART (Интерактивное дерево оргструктуры) */}
         {subTab === 'orgchart' && (
           <div className="space-y-4">
-            <div className="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-4 flex flex-wrap items-center justify-between gap-4">
+            <div className="rounded-lg border border-zinc-800 bg-zinc-900/60 p-4 flex flex-wrap items-center justify-between gap-4">
               <div>
                 <h2 className="text-sm font-bold text-zinc-100">
                   Интерактивная Оргструктура компании (Active Directory Manager Hierarchy)
                 </h2>
                 <p className="text-xs text-zinc-400 mt-0.5">
-                  Перетащите карточку любого сотрудника мышью на другого руководителя, чтобы мгновенно изменить иерархию подчинения (<code className="text-indigo-300">Set-ADUser -Manager</code>).
+                  Перетащите карточку любого сотрудника мышью на другого руководителя, чтобы мгновенно изменить иерархию подчинения (<code className="text-emerald-400">Set-ADUser -Manager</code>).
                 </p>
               </div>
               <div className="relative w-72">
@@ -517,7 +517,7 @@ Unlock-ADAccount -Identity "${u.samAccountName}"`;
                   value={orgSearch}
                   onChange={(e) => setOrgSearch(e.target.value)}
                   placeholder="Поиск по ФИО, должности, отделу..."
-                  className="w-full rounded-xl border border-zinc-800 bg-zinc-950 pl-9 pr-3 py-2 text-xs text-zinc-100"
+                  className="w-full rounded-md border border-zinc-800 bg-zinc-950 pl-9 pr-3 py-2 text-xs text-zinc-100"
                 />
               </div>
             </div>
@@ -531,7 +531,7 @@ Unlock-ADAccount -Identity "${u.samAccountName}"`;
         {/* 3. ACCESS PATH GRAPH (BloodHound-style Effective Access) */}
         {subTab === 'graph' && selectedGraphUser && (
           <div className="space-y-5">
-            <div className="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-4 flex flex-wrap items-center justify-between gap-4">
+            <div className="rounded-lg border border-zinc-800 bg-zinc-900/60 p-4 flex flex-wrap items-center justify-between gap-4">
               <div>
                 <h2 className="text-sm font-bold text-zinc-100">
                   Граф эффективных прав доступа и делегирования ACL (Access Path Visualizer)
@@ -545,7 +545,7 @@ Unlock-ADAccount -Identity "${u.samAccountName}"`;
                 <select
                   value={graphUserId}
                   onChange={(e) => setGraphUserId(e.target.value)}
-                  className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-zinc-100 font-medium"
+                  className="rounded-md border border-zinc-800 bg-zinc-950 px-3 py-2 text-zinc-100 font-medium"
                 >
                   {users.map((u) => (
                     <option key={u.id} value={u.id}>
@@ -558,8 +558,8 @@ Unlock-ADAccount -Identity "${u.samAccountName}"`;
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 items-start">
               {/* Column 1: User Node */}
-              <div className="rounded-2xl border border-indigo-500/40 bg-zinc-900/90 p-5 space-y-3">
-                <div className="text-[10px] font-bold uppercase tracking-wider text-indigo-400">
+              <div className="rounded-lg border border-emerald-500/30 bg-zinc-900/90 p-5 space-y-3">
+                <div className="text-[10px] font-bold uppercase tracking-wider text-emerald-400">
                   1. Субъект доступа (AD User)
                 </div>
                 <div className="text-base font-bold text-zinc-100">
@@ -574,7 +574,7 @@ Unlock-ADAccount -Identity "${u.samAccountName}"`;
                 <div className="pt-2">
                   <button
                     onClick={() => onOpenUserWindow(selectedGraphUser)}
-                    className="w-full rounded-xl bg-zinc-800 hover:bg-zinc-700 py-2 text-xs font-medium text-zinc-100 transition"
+                    className="w-full rounded-md bg-zinc-800 hover:bg-zinc-700 py-2 text-xs font-medium text-zinc-100 transition"
                   >
                     Открыть свойства AD
                   </button>
@@ -582,7 +582,7 @@ Unlock-ADAccount -Identity "${u.samAccountName}"`;
               </div>
 
               {/* Column 2: Security Groups */}
-              <div className="rounded-2xl border border-zinc-800 bg-zinc-900/70 p-5 space-y-3">
+              <div className="rounded-lg border border-zinc-800 bg-zinc-900/70 p-5 space-y-3">
                 <div className="text-[10px] font-bold uppercase tracking-wider text-amber-400">
                   2. Членство в группах RBAC ({userGroupObjects.length})
                 </div>
@@ -590,7 +590,7 @@ Unlock-ADAccount -Identity "${u.samAccountName}"`;
                   {userGroupObjects.map((g) => (
                     <div
                       key={g.id}
-                      className="rounded-xl border border-zinc-800 bg-zinc-950 p-3 space-y-1"
+                      className="rounded-md border border-zinc-800 bg-zinc-950 p-3 space-y-1"
                     >
                       <div className="flex items-center justify-between">
                         <span className="text-xs font-bold text-zinc-100">
@@ -607,7 +607,7 @@ Unlock-ADAccount -Identity "${u.samAccountName}"`;
               </div>
 
               {/* Column 3: Effective Target Permissions & Servers */}
-              <div className="rounded-2xl border border-zinc-800 bg-zinc-900/70 p-5 space-y-3">
+              <div className="rounded-lg border border-zinc-800 bg-zinc-900/70 p-5 space-y-3">
                 <div className="text-[10px] font-bold uppercase tracking-wider text-emerald-400">
                   3. Эффективные права ACL и доступ к узлам
                 </div>
@@ -615,7 +615,7 @@ Unlock-ADAccount -Identity "${u.samAccountName}"`;
                   {matchedAcls.map((a) => (
                     <div
                       key={a.id}
-                      className="rounded-xl border border-emerald-500/30 bg-zinc-950 p-3 space-y-1"
+                      className="rounded-md border border-emerald-500/30 bg-zinc-950 p-3 space-y-1"
                     >
                       <div className="flex items-center justify-between">
                         <span className="text-xs font-bold text-emerald-300">
@@ -639,7 +639,7 @@ Unlock-ADAccount -Identity "${u.samAccountName}"`;
                     .map((c) => (
                       <div
                         key={c.id}
-                        className="rounded-xl border border-zinc-800 bg-zinc-950 p-3 flex items-center justify-between"
+                        className="rounded-md border border-zinc-800 bg-zinc-950 p-3 flex items-center justify-between"
                       >
                         <div>
                           <div className="text-xs font-bold text-zinc-100">
@@ -649,7 +649,7 @@ Unlock-ADAccount -Identity "${u.samAccountName}"`;
                             {c.ipAddress} • {c.operatingSystem}
                           </div>
                         </div>
-                        <ArrowRight className="h-4 w-4 text-indigo-400" />
+                        <ArrowRight className="h-4 w-4 text-emerald-400" />
                       </div>
                     ))}
                 </div>
@@ -661,15 +661,15 @@ Unlock-ADAccount -Identity "${u.samAccountName}"`;
         {/* 4. FINE-GRAINED PASSWORD POLICIES (PSO) */}
         {subTab === 'pso' && (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-            <div className="rounded-2xl border border-zinc-800 bg-zinc-900/80 p-5 space-y-3.5 h-fit">
+            <div className="rounded-lg border border-zinc-800 bg-zinc-900/80 p-5 space-y-3.5 h-fit">
               <div className="flex items-center gap-2">
-                <Lock className="h-4 w-4 text-indigo-400" />
+                <Lock className="h-4 w-4 text-emerald-400" />
                 <h3 className="text-sm font-bold text-zinc-100">
                   Создать парольную политику PSO
                 </h3>
               </div>
               <p className="text-xs text-zinc-400">
-                Гранулярные политики паролей (<code className="text-indigo-300">msDS-PasswordSettings</code>) позволяют задавать разные требования длины пароля и блокировки для разных групп AD.
+                Гранулярные политики паролей (<code className="text-emerald-400">msDS-PasswordSettings</code>) позволяют задавать разные требования длины пароля и блокировки для разных групп AD.
               </p>
 
               <div className="space-y-2.5 text-xs">
@@ -678,7 +678,7 @@ Unlock-ADAccount -Identity "${u.samAccountName}"`;
                   <input
                     value={newPso.name}
                     onChange={(e) => setNewPso({ ...newPso, name: e.target.value })}
-                    className="w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 font-mono text-zinc-100"
+                    className="w-full rounded-md border border-zinc-800 bg-zinc-950 px-3 py-2 font-mono text-zinc-100"
                   />
                 </div>
                 <div className="grid grid-cols-2 gap-2">
@@ -695,7 +695,7 @@ Unlock-ADAccount -Identity "${u.samAccountName}"`;
                           minPasswordLength: Number(e.target.value),
                         })
                       }
-                      className="w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-zinc-100"
+                      className="w-full rounded-md border border-zinc-800 bg-zinc-950 px-3 py-2 text-zinc-100"
                     />
                   </div>
                   <div>
@@ -711,7 +711,7 @@ Unlock-ADAccount -Identity "${u.samAccountName}"`;
                           precedence: Number(e.target.value),
                         })
                       }
-                      className="w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-zinc-100"
+                      className="w-full rounded-md border border-zinc-800 bg-zinc-950 px-3 py-2 text-zinc-100"
                     />
                   </div>
                 </div>
@@ -729,7 +729,7 @@ Unlock-ADAccount -Identity "${u.samAccountName}"`;
                           maxPasswordAgeDays: Number(e.target.value),
                         })
                       }
-                      className="w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-zinc-100"
+                      className="w-full rounded-md border border-zinc-800 bg-zinc-950 px-3 py-2 text-zinc-100"
                     />
                   </div>
                   <div>
@@ -745,7 +745,7 @@ Unlock-ADAccount -Identity "${u.samAccountName}"`;
                           lockoutThreshold: Number(e.target.value),
                         })
                       }
-                      className="w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-zinc-100"
+                      className="w-full rounded-md border border-zinc-800 bg-zinc-950 px-3 py-2 text-zinc-100"
                     />
                   </div>
                 </div>
@@ -758,7 +758,7 @@ Unlock-ADAccount -Identity "${u.samAccountName}"`;
                     onChange={(e) =>
                       setNewPso({ ...newPso, appliesToGroup: e.target.value })
                     }
-                    className="w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-zinc-100"
+                    className="w-full rounded-md border border-zinc-800 bg-zinc-950 px-3 py-2 text-zinc-100"
                   >
                     {groups.map((g) => (
                       <option key={g.id} value={g.samAccountName}>
@@ -789,7 +789,7 @@ Unlock-ADAccount -Identity "${u.samAccountName}"`;
                       ps
                     );
                   }}
-                  className="w-full flex items-center justify-center gap-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 py-2.5 text-xs font-semibold text-white transition"
+                  className="w-full flex items-center justify-center gap-1.5 rounded-md bg-emerald-600 hover:bg-emerald-500 py-2.5 text-xs font-medium text-white transition"
                 >
                   <Plus className="h-4 w-4" /> Создать политику PSO
                 </button>
@@ -803,11 +803,11 @@ Unlock-ADAccount -Identity "${u.samAccountName}"`;
                 .map((p) => (
                   <div
                     key={p.id}
-                    className="rounded-2xl border border-zinc-800 bg-zinc-900/70 p-5 space-y-3"
+                    className="rounded-lg border border-zinc-800 bg-zinc-900/70 p-5 space-y-3"
                   >
                     <div className="flex flex-wrap items-center justify-between gap-2">
                       <div className="flex items-center gap-2.5">
-                        <span className="rounded-lg bg-indigo-500/20 border border-indigo-500/30 px-2.5 py-1 font-mono text-xs font-bold text-indigo-300">
+                        <span className="rounded-lg bg-emerald-500/15 border border-emerald-500/20 px-2.5 py-1 font-mono text-xs font-bold text-emerald-400">
                           Приоритет #{p.precedence}
                         </span>
                         <h4 className="text-sm font-bold text-zinc-100 font-mono">
@@ -827,7 +827,7 @@ Unlock-ADAccount -Identity "${u.samAccountName}"`;
                     </div>
                     <p className="text-xs text-zinc-400">{p.description}</p>
                     <div className="grid grid-cols-3 gap-2.5 text-xs">
-                      <div className="rounded-xl border border-zinc-800 bg-zinc-950 p-2.5">
+                      <div className="rounded-md border border-zinc-800 bg-zinc-950 p-2.5">
                         <div className="text-[10px] text-zinc-500">
                           Минимальная длина пароля
                         </div>
@@ -835,7 +835,7 @@ Unlock-ADAccount -Identity "${u.samAccountName}"`;
                           {p.minPasswordLength} символов
                         </div>
                       </div>
-                      <div className="rounded-xl border border-zinc-800 bg-zinc-950 p-2.5">
+                      <div className="rounded-md border border-zinc-800 bg-zinc-950 p-2.5">
                         <div className="text-[10px] text-zinc-500">
                           Максимальный срок пароля
                         </div>
@@ -843,7 +843,7 @@ Unlock-ADAccount -Identity "${u.samAccountName}"`;
                           {p.maxPasswordAgeDays} дней
                         </div>
                       </div>
-                      <div className="rounded-xl border border-zinc-800 bg-zinc-950 p-2.5">
+                      <div className="rounded-md border border-zinc-800 bg-zinc-950 p-2.5">
                         <div className="text-[10px] text-zinc-500">
                           Порог блокировки (Lockout)
                         </div>
@@ -863,3 +863,4 @@ Unlock-ADAccount -Identity "${u.samAccountName}"`;
     </div>
   );
 };
+

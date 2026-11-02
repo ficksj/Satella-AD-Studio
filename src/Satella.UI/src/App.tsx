@@ -54,14 +54,7 @@ interface OpenUserWin {
 
 export const App: React.FC = () => {
   const [lang, setLang] = useState<Lang>('ru');
-  const [visualTheme, setVisualTheme] = useState<'emerald' | 'midnight' | 'warm'>('emerald');
   const t = translations[lang];
-
-  useEffect(() => {
-    document.body.classList.remove('theme-midnight', 'theme-warm');
-    if (visualTheme === 'midnight') document.body.classList.add('theme-midnight');
-    if (visualTheme === 'warm') document.body.classList.add('theme-warm');
-  }, [visualTheme]);
 
   const [activeTab, setActiveTab] = useState<string>('dashboard');
   const [cmdOpen, setCmdOpen] = useState(false);
@@ -347,9 +340,9 @@ export const App: React.FC = () => {
     },
     {
       id: 'security',
-      label: lang === 'ru' ? 'ИБ, PAM и Контроллеры' : 'Security, PAM & DCs',
+      label: lang === 'ru' ? 'Аудит ИБ и PAM' : 'Security & PAM',
       icon: ShieldAlert,
-      badge: 'NEW',
+      badge: undefined,
     },
     { id: 'automation', label: t.navAutomation, icon: Sparkles },
     { id: 'infra', label: t.navInfra, icon: ShieldCheck },
@@ -362,33 +355,31 @@ export const App: React.FC = () => {
   ];
 
   return (
-    <div className="flex h-screen w-screen flex-col overflow-hidden bg-zinc-950 text-zinc-100">
+    <div className="flex h-screen w-screen flex-col overflow-hidden bg-[#0c0d10] text-zinc-100">
       {/* Top Global Header Bar */}
-      <header className="flex h-14 shrink-0 items-center justify-between border-b border-zinc-800/80 bg-zinc-900/70 backdrop-blur-md px-5">
+      <header className="flex h-12 shrink-0 items-center justify-between border-b border-zinc-800 bg-[#121418] px-4 select-none">
         <div className="flex items-center gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-emerald-500/30 bg-emerald-950/40 shadow-sm p-1">
-            <PixelMonkeyIcon className="h-7 w-7" />
+          <div className="flex h-7 w-7 items-center justify-center rounded-md border border-zinc-700 bg-zinc-800 p-0.5">
+            <PixelMonkeyIcon className="h-5 w-5" />
           </div>
-          <div>
-            <div className="flex items-center gap-2.5">
-              <span className="text-sm font-bold tracking-tight text-zinc-100">
-                SATELLA <span className="text-emerald-400">AD</span>
-              </span>
-              <span className="rounded-md bg-emerald-500/10 border border-emerald-500/25 px-2 py-0.5 text-[10px] font-medium text-emerald-300">
-                Сделано командой Crazy Monkeys
-              </span>
-            </div>
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-semibold tracking-tight text-zinc-100">
+              Satella AD Studio
+            </span>
+            <span className="rounded px-1.5 py-0.5 text-[10px] font-medium bg-zinc-800 text-zinc-400 border border-zinc-700">
+              Crazy Monkeys
+            </span>
           </div>
 
           {activeProfile && (
-            <div className="ml-4 hidden md:flex items-center gap-2 rounded-lg border border-zinc-800 bg-zinc-900/70 px-2.5 py-1 text-xs">
-              <Server className="h-3.5 w-3.5 text-emerald-400" />
-              <span className="font-mono text-zinc-300">
+            <div className="ml-3 hidden md:flex items-center gap-2 rounded-md border border-zinc-800 bg-zinc-900/90 px-2.5 py-1 text-xs">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+              <span className="font-mono text-[11px] text-zinc-300">
                 {activeProfile.domainName}
               </span>
               <span className="text-zinc-600">•</span>
-              <span className="text-[11px] text-amber-300">
-                {activeProfile.isSandbox ? t.sandboxBadge : t.liveAdBadge}
+              <span className="text-[10px] text-zinc-400">
+                {activeProfile.isSandbox ? 'Эмулятор' : 'Боевой DC'}
               </span>
             </div>
           )}
@@ -397,11 +388,11 @@ export const App: React.FC = () => {
         {/* Center Command Palette Trigger */}
         <button
           onClick={() => setCmdOpen(true)}
-          className="flex w-96 items-center justify-between rounded-lg border border-zinc-800 bg-zinc-900/80 px-3 py-1.5 text-xs text-zinc-400 hover:border-zinc-700 hover:text-zinc-200 transition"
+          className="flex w-80 items-center justify-between rounded-md border border-zinc-800 bg-zinc-900 px-3 py-1 text-xs text-zinc-400 hover:border-zinc-700 hover:text-zinc-200 transition"
         >
           <span className="flex items-center gap-2">
-            <Search className="h-3.5 w-3.5 text-indigo-400" />
-            {t.cmdPaletteHint}
+            <Search className="h-3.5 w-3.5 text-zinc-400" />
+            <span className="text-zinc-400">{t.cmdPaletteHint}</span>
           </span>
           <kbd className="rounded border border-zinc-700 bg-zinc-800 px-1.5 py-0.5 font-mono text-[10px] text-zinc-300">
             Ctrl+K
@@ -410,39 +401,19 @@ export const App: React.FC = () => {
 
         {/* Right Global Controls */}
         <div className="flex items-center gap-2">
-          <div className="hidden lg:flex items-center rounded-lg border border-zinc-800 bg-zinc-950/80 p-0.5 text-[11px]">
-            {[
-              { id: 'emerald', label: '🌿 Изумруд' },
-              { id: 'midnight', label: '🌌 Индиго' },
-              { id: 'warm', label: '☕ Тёплый' },
-            ].map((th) => (
-              <button
-                key={th.id}
-                onClick={() => setVisualTheme(th.id as typeof visualTheme)}
-                className={`px-2.5 py-1 rounded-md font-medium transition ${
-                  visualTheme === th.id
-                    ? 'bg-zinc-800 text-emerald-300 shadow-sm'
-                    : 'text-zinc-400 hover:text-zinc-200'
-                }`}
-              >
-                {th.label}
-              </button>
-            ))}
-          </div>
-
           <button
             onClick={() => setPsDrawerOpen(true)}
-            className="flex items-center gap-1.5 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 text-xs font-medium text-emerald-300 hover:bg-emerald-500/20 transition"
+            className="flex items-center gap-1.5 rounded-md border border-zinc-700 bg-zinc-800/80 px-2.5 py-1 text-xs font-medium text-zinc-200 hover:bg-zinc-700 transition"
           >
-            <Terminal className="h-3.5 w-3.5" />
-            <span>&lt;/&gt; {t.psInspector}</span>
+            <Terminal className="h-3.5 w-3.5 text-emerald-400" />
+            <span>PowerShell</span>
           </button>
 
           <button
             onClick={() => setLang((l) => (l === 'ru' ? 'en' : 'ru'))}
-            className="flex items-center gap-1 rounded-lg border border-zinc-800 bg-zinc-900 px-2.5 py-1.5 text-xs font-medium text-zinc-300 hover:bg-zinc-800"
+            className="flex items-center gap-1 rounded-md border border-zinc-800 bg-zinc-900 px-2 py-1 text-xs font-medium text-zinc-300 hover:bg-zinc-800"
           >
-            <Globe className="h-3.5 w-3.5 text-indigo-400" />
+            <Globe className="h-3.5 w-3.5 text-zinc-400" />
             {lang.toUpperCase()}
           </button>
         </div>
@@ -451,8 +422,8 @@ export const App: React.FC = () => {
       {/* Main Workspace Container */}
       <div className="flex flex-1 overflow-hidden">
         {/* Left Navigation Sidebar */}
-        <aside className="w-60 shrink-0 border-r border-zinc-800/80 bg-zinc-900/40 flex flex-col justify-between p-3">
-          <nav className="space-y-1">
+        <aside className="w-56 shrink-0 border-r border-zinc-800 bg-[#101216] flex flex-col justify-between p-2">
+          <nav className="space-y-0.5">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = activeTab === item.id;
@@ -460,26 +431,26 @@ export const App: React.FC = () => {
                 <button
                   key={item.id}
                   onClick={() => setActiveTab(item.id)}
-                  className={`w-full flex items-center justify-between rounded-lg px-3 py-2.5 text-xs font-medium transition ${
+                  className={`w-full flex items-center justify-between rounded-md px-2.5 py-2 text-xs transition ${
                     isActive
-                      ? 'bg-indigo-600/15 text-indigo-300 border border-indigo-500/30'
-                      : 'text-zinc-400 hover:bg-zinc-900 hover:text-zinc-200 border border-transparent'
+                      ? 'bg-zinc-800/90 text-zinc-100 font-medium border-l-2 border-emerald-500 rounded-l-none'
+                      : 'text-zinc-400 hover:bg-zinc-800/50 hover:text-zinc-200'
                   }`}
                 >
-                  <div className="flex items-center gap-2.5">
+                  <div className="flex items-center gap-2">
                     <Icon
                       className={`h-4 w-4 ${
-                        isActive ? 'text-indigo-400' : 'text-zinc-500'
+                        isActive ? 'text-emerald-400' : 'text-zinc-400'
                       }`}
                     />
                     <span>{item.label}</span>
                   </div>
                   {item.badge && (
                     <span
-                      className={`rounded-full px-1.5 py-0.5 font-mono text-[10px] ${
-                        item.id === 'directory'
-                          ? 'bg-rose-500/20 text-rose-300'
-                          : 'bg-zinc-800 text-zinc-400'
+                      className={`rounded px-1.5 py-0.5 font-mono text-[10px] ${
+                        item.id === 'directory' || item.id === 'forensics'
+                          ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
+                          : 'bg-zinc-800 text-zinc-400 border border-zinc-700'
                       }`}
                     >
                       {item.badge}
@@ -490,37 +461,27 @@ export const App: React.FC = () => {
             })}
           </nav>
 
-          {/* Bottom Domain Status & Crazy Monkeys Signature Card */}
-          <div className="rounded-xl border border-emerald-500/30 bg-zinc-900/60 p-3 space-y-2 text-[11px]">
-            <div className="flex items-center gap-2 border-b border-zinc-800 pb-2">
-              <PixelMonkeyIcon className="h-6 w-6 shrink-0" />
-              <div>
-                <div className="font-bold text-emerald-300 text-xs">
-                  Crazy Monkeys
-                </div>
-                <div className="text-[10px] text-zinc-400">
-                  Сделано командой Crazy Monkeys
-                </div>
-              </div>
-            </div>
+          {/* Bottom Domain Status Card */}
+          <div className="rounded-md border border-zinc-800 bg-zinc-900/60 p-2.5 space-y-1.5 text-[11px]">
             <div className="flex items-center justify-between text-zinc-400">
-              <span>Статус LDAPS / WinRM</span>
-              <span className="flex items-center gap-1 text-emerald-400 font-medium">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                Connected
+              <span className="font-medium text-zinc-300">Каталог AD</span>
+              <span className="flex items-center gap-1 text-emerald-400 text-[10px]">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                Онлайн
               </span>
             </div>
             <div className="font-mono text-[10px] text-zinc-400 truncate">
               {activeProfile?.dcHost || 'srv-dc-01.corp.satella.local'}
             </div>
-            <div className="text-[10px] text-zinc-500">
-              Открыто карточек AD: {openWindows.length}
+            <div className="text-[10px] text-zinc-500 border-t border-zinc-800/80 pt-1 flex justify-between">
+              <span>Карточек: {openWindows.length}</span>
+              <span>Crazy Monkeys</span>
             </div>
           </div>
         </aside>
 
         {/* Active View Content */}
-        <main className="flex-1 overflow-hidden bg-zinc-950 relative">
+        <main className="flex-1 overflow-hidden bg-[#0c0d10] relative">
           {activeTab === 'dashboard' && (
             <DashboardView
               stats={stats}
@@ -739,9 +700,9 @@ export const App: React.FC = () => {
 
       {/* Bottom Taskbar for Open / Minimized User Cards */}
       {openWindows.length > 0 && (
-        <div className="flex items-center justify-between border-t border-zinc-800 bg-zinc-950 px-4 py-1.5 z-40">
+        <div className="flex items-center justify-between border-t border-zinc-800 bg-[#121418] px-4 py-1.5 z-40">
           <div className="flex items-center gap-2 overflow-x-auto">
-            <span className="text-[11px] font-medium text-zinc-500 mr-1">
+            <span className="text-[11px] font-medium text-zinc-400 mr-1">
               Открытые карточки ({openWindows.length}):
             </span>
             {openWindows.map((win) => {
@@ -754,13 +715,13 @@ export const App: React.FC = () => {
                     if (win.minimized) handleToggleMinimizeWindow(win.userId);
                     handleFocusWindow(win.userId);
                   }}
-                  className={`flex items-center gap-2 rounded-lg border px-2.5 py-1 text-xs cursor-pointer transition ${
+                  className={`flex items-center gap-2 rounded-md border px-2.5 py-1 text-xs cursor-pointer transition ${
                     win.minimized
                       ? 'border-zinc-800 bg-zinc-900 text-zinc-400 hover:text-zinc-200'
-                      : 'border-indigo-500/40 bg-indigo-500/15 text-indigo-200'
+                      : 'border-zinc-700 bg-zinc-800 text-zinc-100 shadow-sm'
                   }`}
                 >
-                  <User className="h-3 w-3 text-indigo-400" />
+                  <User className="h-3 w-3 text-emerald-400" />
                   <span className="truncate max-w-[150px] font-medium">
                     {u.displayName}
                   </span>
@@ -780,24 +741,24 @@ export const App: React.FC = () => {
 
           <button
             onClick={() => setOpenWindows([])}
-            className="text-[11px] text-zinc-500 hover:text-rose-400 shrink-0 ml-4"
+            className="text-[11px] text-zinc-400 hover:text-rose-400 shrink-0 ml-4 font-medium"
           >
             Закрыть все окна
           </button>
         </div>
       )}
 
-      {/* Global Toast Notification with PowerShell Quick View */}
+      {/* Global Toast Notification */}
       {toast && (
-        <div className="fixed bottom-12 right-5 z-50 flex items-center gap-3 rounded-xl border border-indigo-500/40 bg-zinc-900/95 px-4 py-3 text-xs text-zinc-100 shadow-2xl backdrop-blur-md">
+        <div className="fixed bottom-12 right-5 z-50 flex items-center gap-3 rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-2.5 text-xs text-zinc-100 shadow-xl">
           <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
           <span>{toast.message}</span>
           {toast.hasPs && (
             <button
               onClick={() => setPsDrawerOpen(true)}
-              className="rounded-md bg-emerald-500/15 border border-emerald-500/30 px-2 py-1 font-mono text-[11px] text-emerald-300 hover:bg-emerald-500/25"
+              className="rounded bg-zinc-800 border border-zinc-700 px-2 py-1 font-mono text-[11px] text-zinc-300 hover:text-white"
             >
-              &lt;/&gt; PowerShell
+              PowerShell
             </button>
           )}
         </div>
